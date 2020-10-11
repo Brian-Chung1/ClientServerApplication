@@ -25,7 +25,7 @@ public class Client {
 	/**
 	 * provides a peer-to-peer connection to the server
 	 */
-	NetworkAccess networkaccess;
+	private NetworkAccess networkaccess;
   	
 	/**
 	 * Creates a peer-to-peer connection to the server
@@ -37,23 +37,8 @@ public class Client {
 	{
 		networkaccess = new NetworkAccess(ip, port);
 	}
-
-	/**
-	 * instantiates a new client and connects them to the server
-	 * this function will be called within the GUI
-	 */
-	public static Client newClient ()
-	{
-		//we will replace this static IP with a method that will calculate the users IP later on..
-		String host = "127.0.0.1";
-		int port = 8000;
-
-		// -- instantiate a Client object
-		//    the constructor will attempt to connect to the server
-		Client client = new Client(host, port);
-		return client;
-	}
-
+	
+	
 	/**
 	 * Disconnects the client from the server
 	 */
@@ -72,8 +57,12 @@ public class Client {
 	 */
 	public static void main(String[] args) {
 
-		Client client=newClient();
-
+		String host = "127.0.0.1";
+		int port = 8000;
+		// -- instantiate a Client object
+		//    the constructor will attempt to connect to the server
+		Client client = new Client(host, port);
+		
 		// -- send message to server and receive reply.
 		String commandString;
 		String replyString;
