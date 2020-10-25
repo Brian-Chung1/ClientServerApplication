@@ -1,0 +1,2 @@
+to do list
+1) open module settings of project, set the resources package to a resource folder
