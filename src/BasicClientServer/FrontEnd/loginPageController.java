@@ -1,5 +1,6 @@
 package BasicClientServer.FrontEnd;
 
+import BasicClientServer.BackEnd.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +25,7 @@ public class loginPageController {
 
 
 
-
+    //Opens Account Creation window upon pressing 'New Account' Button
     public void createAccountWindow(MouseEvent mouseEvent) {
         try {
             Parent newAccount = FXMLLoader.load(getClass().getResource("/NewAccount.fxml")); //account creation page
@@ -42,6 +43,7 @@ public class loginPageController {
         }
     }
 
+    //Opens Password Recovery window upon pressing 'Forgot Password' Button
     public void forgotPasswordWindow(MouseEvent mouseEvent) {
         try {
             Parent newAccount = FXMLLoader.load(getClass().getResource("/ForgotPassword.fxml")); //account creation page
@@ -56,7 +58,7 @@ public class loginPageController {
         }
     }
 
-
+    //Logic for the show password checkbox
     public void togglePasswordVisibility(ActionEvent actionEvent) {
         if(showPasswordCheckBox.isSelected()){
             System.out.println("password is now shown");
@@ -73,6 +75,18 @@ public class loginPageController {
 
 
     }
-    
-    
+
+    //Connects to server upon pressing 'Connect' Button
+    public void connectToServer(MouseEvent mouseEvent) {
+        String host = "127.0.0.1";
+        int port = 8000;
+        // -- instantiate a Client object
+        //    the constructor will attempt to connect to the server
+        Client client = new Client(host, port);
+    }
+
+
+
+
+
 }

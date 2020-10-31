@@ -5,9 +5,10 @@ module ClientServerApplication {
     requires javafx.graphics;
     requires javafx.web;
 
+    exports BasicClientServer.BackEnd;
+
     opens BasicClientServer;
     opens BasicClientServer.FrontEnd to javafx.fxml;
     opens BasicClientServer.BackEnd to javafx.fxml;
-    opens BasicClientServer.resources to javafx.fxml;
 
 }

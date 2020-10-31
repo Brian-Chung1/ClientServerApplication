@@ -5,8 +5,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<!--"fx:controller="BasicClientServer.FrontEnd.MainApplication" if it bugs check this-->
-
 <AnchorPane prefHeight="497.0" prefWidth="753.0" style="-fx-background-color: #282c34;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane layoutX="30.0" layoutY="26.0" prefHeight="380.0" prefWidth="695.0" style="-fx-background-color: #33373e;">

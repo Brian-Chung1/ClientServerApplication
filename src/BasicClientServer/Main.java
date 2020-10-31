@@ -17,6 +17,7 @@ public class Main extends Application {
         Parent forgotPassword = FXMLLoader.load(getClass().getResource("resources/ForgotPassword.fxml")); //password recovery page
         Parent changePassword = FXMLLoader.load(getClass().getResource("resources/ChangePassword.fxml")); //password change page
         Parent mainApplication = FXMLLoader.load(getClass().getResource("resources/MainApplication.fxml")); //Main Application
+        Parent ServerGUI = FXMLLoader.load(getClass().getResource("resources/ServerGUI.fxml")); //Server GUI
 
         //create a scene for each fxml file
         //switch between scenes for changing windows
