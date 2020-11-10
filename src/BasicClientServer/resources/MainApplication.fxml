@@ -18,5 +18,6 @@
       </AnchorPane>
       <Button layoutX="630.0" layoutY="427.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="96.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Disconnect" />
       <Button layoutX="517.0" layoutY="427.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="96.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Logout" />
+      <Button layoutX="376.0" layoutY="427.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="121.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Change Password" />
    </children>
 </AnchorPane>

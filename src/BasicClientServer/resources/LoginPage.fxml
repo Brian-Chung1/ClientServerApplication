@@ -31,6 +31,6 @@
             </CheckBox>
             </children>
         </AnchorPane>
-      <Button layoutX="14.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#connectToServer" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Connect" />
+      <Button layoutX="14.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#connectToServer" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Disconnect" />
     </children>
 </AnchorPane>

@@ -95,7 +95,13 @@ public class ClientHandler extends Thread {
 				
 				// -- if it is not the termination message, send it back adding the
 				//    required (by readLine) "\n"
-
+				//Add this clienthandler to the server.connections (vector) <----- TODO
+				if(cmd.equals("connect")) {
+					networkaccess.sendString("Success", true);
+				}
+				if(cmd.equals("disconnect")) {
+					//remove it from server.connections
+				}
 				// -- if the disconnect string is received then 
 				//    close the socket, remove this thread object from the
 				//    server's active client thread list, and terminate the thread

@@ -9,6 +9,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+
     //test push
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -17,15 +18,12 @@ public class Main extends Application {
         Parent forgotPassword = FXMLLoader.load(getClass().getResource("resources/ForgotPassword.fxml")); //password recovery page
         Parent changePassword = FXMLLoader.load(getClass().getResource("resources/ChangePassword.fxml")); //password change page
         Parent mainApplication = FXMLLoader.load(getClass().getResource("resources/MainApplication.fxml")); //Main Application
-        Parent ServerGUI = FXMLLoader.load(getClass().getResource("resources/ServerGUI.fxml")); //Server GUI
-
-        //create a scene for each fxml file
-        //switch between scenes for changing windows
-
-        Scene scene = new Scene(loginPage);
+        Parent connectWindow = FXMLLoader.load(getClass().getResource("resources/connectWindow.fxml")); //Main Application
 
 
-        primaryStage.setTitle("Login Page");
+        Scene scene = new Scene(changePassword);
+
+        primaryStage.setTitle("Change Password");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

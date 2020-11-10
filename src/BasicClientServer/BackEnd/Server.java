@@ -51,6 +51,8 @@ public class Server {
 	 * Vector is a "thread safe" ArrayList
 	 */
 	private Vector<ClientHandler> clientconnections;
+
+	public int getConnections() { return clientconnections.size(); }
 	
 	/**
 	 * constructor creates the list of clients and
@@ -122,6 +124,33 @@ public class Server {
 		//    what is going on
 		System.out.println("SERVER: connection received for id " + nextId + "\n");
 		++nextId;
+	}
+
+	public void run () {
+
+		try {
+			System.out.println("Server is running...");
+
+			// -- open the server socket
+			serversocket = new ServerSocket(PORT);
+
+			// -- server runs until we manually shut it down
+			while (running) {
+
+				// -- block until a client comes along (listen for the phone to ring)
+				Socket socket = serversocket.accept();
+
+				// -- connection accepted, create a peer-to-peer socket
+				//    between the server (thread) and client (route the call to the requested extension)
+				peerconnection(socket);
+			}
+		}
+		catch (IOException e) {
+
+			e.printStackTrace();
+			System.exit(1);
+
+		}
 	}
 	
 		
