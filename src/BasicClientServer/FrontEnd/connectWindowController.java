@@ -57,7 +57,7 @@ public class connectWindowController {
                 Stage stage = new Stage();
                 stage.setTitle("Login Page");
                 stage.setScene(new Scene(newAccount, 721, 475));
-                ((Stage)((mouseEvent.getSource()).getScene().getWindow())).close();
+//                ((Stage)((mouseEvent.getSource()).getScene().getWindow())).close();
                 stage.show();
 
             }

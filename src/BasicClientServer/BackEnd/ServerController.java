@@ -23,11 +23,8 @@ public class ServerController extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
         Server Server = new Server();
         Server.run();
-
-
     }
 
 
