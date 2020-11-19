@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class NetworkAccess {
@@ -57,6 +58,8 @@ public class NetworkAccess {
 		}
 		
 	}
+
+	public Socket getSocket() { return socket; }
 
 	/**
 	 * Constructor performs connection construction for the server
@@ -138,11 +141,13 @@ public class NetworkAccess {
 					
 				} while (rtnmsg.equals(""));
 			}						
-		} catch (IOException e) {
+		} catch (SocketException e) {
 			
 			e.printStackTrace();
-			System.exit(1);
+//			System.exit(1);
 			
+		} catch (Exception x) {
+//			System.exit(1);
 		}
 		
 		return rtnmsg;

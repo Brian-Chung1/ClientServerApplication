@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 
 public class ServerController extends Application {
 
+    private static Server Server;
+
     public void start(Stage primaryStage) throws Exception {
         Parent ServerGUI = FXMLLoader.load(getClass().getResource("/ServerGUI.fxml")); //Server GUI
         Scene scene = new Scene(ServerGUI);
@@ -23,19 +25,18 @@ public class ServerController extends Application {
 
     public static void main(String[] args) {
         launch(args);
-        Server Server = new Server();
-        Server.run();
     }
 
 
     @FXML private TextArea ServerGUIDisplay;
 
     public void QueryConnectedUsers(MouseEvent mouseEvent) {
-//        int connectedUsers = Server.getConnections();
-//        ServerGUIDisplay.setText("" + connectedUsers);
+        int connectedUsers = Server.getConnections();
+        ServerGUIDisplay.setText("" + connectedUsers);
     }
 
     public void QueryLoggedInUsers(MouseEvent mouseEvent) {
+
 
     }
 
@@ -49,5 +50,11 @@ public class ServerController extends Application {
 
     public void QueryLockedOutUsers(MouseEvent mouseEvent) {
 
+    }
+
+    public void StartServer(MouseEvent mouseEvent) {
+        Server = new Server();
+        Thread serverthread = new Thread(Server);
+        serverthread.start();
     }
 }

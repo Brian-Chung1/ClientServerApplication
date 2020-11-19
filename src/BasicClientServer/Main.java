@@ -21,9 +21,9 @@ public class Main extends Application {
         Parent connectWindow = FXMLLoader.load(getClass().getResource("resources/connectWindow.fxml")); //Main Application
 
 
-        Scene scene = new Scene(changePassword);
+        Scene scene = new Scene(connectWindow);
 
-        primaryStage.setTitle("Change Password");
+        primaryStage.setTitle("Connect");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

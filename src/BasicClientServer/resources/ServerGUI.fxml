@@ -5,33 +5,35 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="497.0" prefWidth="753.0" style="-fx-background-color: #282c34;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BasicClientServer.BackEnd.ServerController">
+<AnchorPane prefHeight="532.0" prefWidth="753.0" style="-fx-background-color: #282c34;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BasicClientServer.BackEnd.ServerController">
     <children>
-        <AnchorPane layoutX="265.0" layoutY="29.0" prefHeight="439.0" prefWidth="461.0" style="-fx-background-color: #33373e;">
-            <children>
-            <TextArea fx:id="ServerGUIDisplay" prefHeight="439.0" prefWidth="461.0" />
-            </children>
-        </AnchorPane>
-        <Button layoutX="21.0" layoutY="123.0" mnemonicParsing="false" onMouseClicked="#QueryConnectedUsers" prefHeight="63.0" prefWidth="225.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Connected Users">
-         <font>
-            <Font size="16.0" />
-         </font></Button>
-      <Button layoutX="20.0" layoutY="217.0" mnemonicParsing="false" onMouseClicked="#QueryLoggedInUsers" prefHeight="63.0" prefWidth="225.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Logged In Users">
+        <Button layoutX="21.0" layoutY="168.0" mnemonicParsing="false" onMouseClicked="#QueryConnectedUsers" prefHeight="63.0" prefWidth="225.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Connected Users">
          <font>
             <Font size="16.0" />
          </font>
       </Button>
-      <Button layoutX="20.0" layoutY="29.0" mnemonicParsing="false" onMouseClicked="#QuerySignedUpUsers" prefHeight="63.0" prefWidth="225.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Signed Up Users">
+      <Button layoutX="20.0" layoutY="262.0" mnemonicParsing="false" onMouseClicked="#QueryLoggedInUsers" prefHeight="63.0" prefWidth="225.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Logged In Users">
          <font>
             <Font size="16.0" />
          </font>
       </Button>
-      <Button layoutX="21.0" layoutY="405.0" mnemonicParsing="false" onMouseClicked="#QueryRegisteredUsers" prefHeight="63.0" prefWidth="225.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Registered Users">
+      <Button layoutX="20.0" layoutY="74.0" mnemonicParsing="false" onMouseClicked="#QuerySignedUpUsers" prefHeight="63.0" prefWidth="225.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Signed Up Users">
          <font>
             <Font size="16.0" />
          </font>
       </Button>
-        <Button layoutX="21.0" layoutY="311.0" mnemonicParsing="false" onMouseClicked="#QueryLockedOutUsers" prefHeight="63.0" prefWidth="225.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Locked Out Users">
+      <Button layoutX="21.0" layoutY="450.0" mnemonicParsing="false" onMouseClicked="#QueryRegisteredUsers" prefHeight="63.0" prefWidth="225.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Registered Users">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+        <Button layoutX="21.0" layoutY="356.0" mnemonicParsing="false" onMouseClicked="#QueryLockedOutUsers" prefHeight="63.0" prefWidth="225.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Locked Out Users">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <TextArea fx:id="ServerGUIDisplay" layoutX="269.0" layoutY="74.0" prefHeight="439.0" prefWidth="461.0" />
+      <Button layoutX="20.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#StartServer" prefHeight="43.0" prefWidth="711.0" style="-fx-background-color: #61dafb; -fx-cursor: hand;" text="Start Server">
          <font>
             <Font size="16.0" />
          </font>

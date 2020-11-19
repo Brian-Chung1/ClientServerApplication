@@ -33,16 +33,15 @@ public class CommandProtocol {
 		System.out.println("SERVER receive: " + cmd);
 		
 		if (cmd.equals("disconnect")) {
-
-			// -- no response to the client is necessary
 			na.close();
-			ch.getServer().removeID(ch.getID());
+			ch.getServer().removeClientConnection(ch.getID());
 			ch.Stop();
+
 		}
-		else if (cmd.equals("hello")) {
-				
-			// -- client is expecting a response
-			na.sendString("world!" + "\n", false);
+		else if (cmd.equals("connect")) {
+			System.out.println("Command Processor has received Connect");
+			na.sendString("Success", true);
+			ch.getServer().peerconnection(na.getSocket());
 			
 		}
 		else {
