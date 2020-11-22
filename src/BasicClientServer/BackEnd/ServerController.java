@@ -39,6 +39,11 @@ public class ServerController extends Application {
 
     @FXML private TextArea ServerGUIDisplay;
 
+
+    //This is how we add text without replacing the previous text
+    //ServerGUIDisplay.appendText("some text here" + "\n"); The "\n" will add a new line
+
+
     public void QueryConnectedUsers(MouseEvent mouseEvent) {
         int connectedUsers = Server.getConnections();
         ServerGUIDisplay.setText("" + connectedUsers);
@@ -50,9 +55,9 @@ public class ServerController extends Application {
     }
 
     public void QuerySignedUpUsers(MouseEvent mouseEvent) throws SQLException {
-        DatabaseConnection db=new DatabaseConnection();
-        String result= db.DBQuerySignedUpUsers();
-        ServerGUIDisplay.setText(result);
+        DatabaseConnection db = new DatabaseConnection();
+        String result = db.DBQuerySignedUpUsers();
+        ServerGUIDisplay.appendText(result + "\n");
     }
 
     public void QueryRegisteredUsers(MouseEvent mouseEvent) {
@@ -60,10 +65,13 @@ public class ServerController extends Application {
     }
 
     public void QueryLockedOutUsers(MouseEvent mouseEvent) throws SQLException {
-        DatabaseConnection db=new DatabaseConnection();
-        String result= db.DBQueryLockedOutUsers();
-        String[] users=result.split(",");
-        //print out the output on the gui
+        DatabaseConnection db = new DatabaseConnection();
+        String result = db.DBQueryLockedOutUsers();
+        String[] users = result.split(",");
+
+        for(String user : users) {
+            ServerGUIDisplay.appendText(user + "\n");
+        }
     }
 
     public void StartServer(MouseEvent mouseEvent) {
