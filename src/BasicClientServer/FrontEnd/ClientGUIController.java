@@ -104,7 +104,6 @@ public class ClientGUIController {
     public void AccountLoginEvent(MouseEvent mouseEvent) {
         // -- send message to server and receive reply.
         String commandString;
-        String userInformationString;
         String replyString;
 
         //If the User presses login button with nothing typed in the fields then popup error message to type in shit
@@ -114,7 +113,7 @@ public class ClientGUIController {
 
         replyString = client.networkaccess.sendString(commandString, true);
 
-        if(replyString.equals("Success")) {
+        if(replyString.equals("success")) {
             try {
                 ((Node)(mouseEvent.getSource())).getScene().getWindow().hide();
                 Parent loginPage = FXMLLoader.load(getClass().getResource("/MainApplication.fxml")); //main application page

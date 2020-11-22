@@ -1,5 +1,9 @@
 package BasicClientServer.BackEnd;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -28,8 +32,7 @@ public class CommandProtocol {
 	 * @param ch: ClientHandler object requesting the processing
 	 * @return
 	 */
-	public static void processCommand(String cmd, NetworkAccess na, ClientHandler ch)
-	{
+	public static void processCommand(String cmd, NetworkAccess na, ClientHandler ch) throws SQLException {
 		String[] commandString = cmd.split(",");
 		cmd = commandString[0];
 		System.out.println("SERVER receive: " + cmd);
@@ -38,24 +41,24 @@ public class CommandProtocol {
 			na.close();
 			ch.getServer().removeClientConnection(ch.getID());
 			ch.Stop();
-
 		}
 		else if (cmd.equals("connect")) {
 			System.out.println("Command Processor has received Connect");
 			na.sendString("Success", true);
 			ch.getServer().peerconnection(na.getSocket());
-			
 		}
 		else if (cmd.equals("login")) {
+			System.out.println("System has received login");
 			String username = commandString[1];
 			String password = commandString[2];
 
 			//database checking
-
-			
-
+			DatabaseConnection db=new DatabaseConnection();
+			db.processLogin(username,password,na, ch);
 		}
+
 		else if (cmd.equals("logout")) {
+			//dont forget to delete them from the logged client vector in databaseconnection function in server
 
 		}
 		else if (cmd.equals("changepassword")) {
@@ -65,6 +68,7 @@ public class CommandProtocol {
 
 		}
 		else if (cmd.equals("forgotpassword")) {
+			//make sure we set lockcount = 0 if forgotpassword is successful
 
 		}
 		else if (cmd.equals("newaccount")) {

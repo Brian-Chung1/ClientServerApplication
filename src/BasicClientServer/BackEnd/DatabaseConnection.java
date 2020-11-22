@@ -19,8 +19,6 @@ public class DatabaseConnection {
 
     // -- objects to be used for database access
     private Connection conn = null;
-    private Statement stmt = null;
-    private ResultSet rset = null;
 
     // -- root/admin
     // -- connect to the world database
@@ -42,108 +40,160 @@ public class DatabaseConnection {
             //    performs functionality of SQL: use <<your schema>>;
             conn = DriverManager.getConnection(userdatabaseURL, user, password);
 
-            // -- These will be used to send queries to the database
-            stmt = conn.createStatement();
-
-            // -- simple SQL strings as they would be typed into the workbench
-            sqlcmd = "SELECT VERSION()";
-            rset = stmt.executeQuery(sqlcmd);
-
-            if (rset.next()) {
-                System.out.println("MySQL Version: " + rset.getString(1));
-            }
-
-
-            /*
-             * EVERYTHING THAT FOLLOWS IS DEPENDENT ON THE TABLES AND COLUMNS
-             * THAT YOU CREATED WITHIN YOUR SCHEMA. YOU MUST MODIFY THIS CODE
-             * TO MATCH THE DATABASE CONFIGURATION. THESE ARE ONLY EXAMPLES.
-             */
-            // -- a query will return a ResultSet
-            sqlcmd = "SELECT * FROM users;";
-            rset = stmt.executeQuery(sqlcmd);
-
-            // -- the metadata tells us how many columns in the data
-            System.out.println("Table Columns:");
-            ResultSetMetaData rsmd = rset.getMetaData();
-            int numberOfColumns = rsmd.getColumnCount();
-            for (int i = 1; i <= numberOfColumns; ++i) {
-                System.out.print(rsmd.getColumnLabel(i) + "\t");
-            }
-            System.out.println();
-
-            // -- loop through the ResultSet one row at a time
-            //    Note that the ResultSet starts at index 1
-            while (rset.next()) {
-                // -- loop through the columns of the ResultSet
-                for (int i = 1; i < numberOfColumns; ++i) {
-                    System.out.print(rset.getString(i) + "\t\t");
-                }
-                System.out.println();
-            }
-
-            // -- select a specific username
-            System.out.println("getting user data for ccrdoc");
-            String selname = "ccrdoc";
-            //        SELECT * FROM users WHERE username = 'ccrdoc'
-            sqlcmd = "SELECT * FROM users WHERE username = '" + selname + "'";
-            rset = stmt.executeQuery(sqlcmd);
-            // -- loop through the ResultSet one row at a time
-            //    Note that the ResultSet starts at index 1
-            while (rset.next()) {
-                // -- loop through the columns of the ResultSet
-                for (int i = 1; i <= numberOfColumns; ++i) {
-                    System.out.print(rset.getString(i) + "\t\t");
-                }
-                System.out.println();
-            }
-
-
-            // -- test an insert statement. Note that this will throw an exception if
-            //    the key already exists in the database
-            System.out.println("inserting into the database");
-            String uname = "ccrdoc2";
-            String pword = "ccrdoc1234";
-            String email = "ccrdoc@gmail.com";
-            try {
-                //        INSERT INTO users VALUES('ccrdoc2', 'ccrdoc1234', 'ccrdoc@gmail.com')
-                sqlcmd = "INSERT INTO users VALUES('" + uname + "', '" + pword + "', '" + email + "')";
-                stmt.executeUpdate(sqlcmd);
-            }
-            catch (SQLException ex) {
-                System.out.println("SQLException: " + ex.getMessage());
-            }
-            // UPDATE `csc335`.`users` SET `password` = '1234ccrdoc' WHERE (`username` = 'ccrdoc2');
-            try {
-                //        INSERT INTO users VALUES('ccrdoc2', 'ccrdoc1234', 'ccrdoc@gmail.com')
-                sqlcmd = "UPDATE users SET password = '1234ccrdoc' WHERE (username = 'ccrdoc2')";
-                stmt.executeUpdate(sqlcmd);
-            }
-            catch (SQLException ex) {
-                System.out.println("SQLException: " + ex.getMessage());
-            }
-
-            System.out.println("selecting all records from data base");
-            sqlcmd = "SELECT * FROM users;";
-            rset = stmt.executeQuery(sqlcmd);
-            // -- loop through the ResultSet one row at a time
-            //    Note that the ResultSet starts at index 1
-            while (rset.next()) {
-                // -- loop through the columns of the ResultSet
-                for (int i = 1; i < numberOfColumns; ++i) {
-                    System.out.print(rset.getString(i) + "\t\t");
-                }
-                System.out.println(rset.getString(numberOfColumns));
-            }
-
-        } catch (SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
         }
-
+        catch(Exception e){
+            System.out.println("no workie");
+        }
     }
+
+    public void processLogin(String username,String password,NetworkAccess na, ClientHandler ch) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet resultSet = stmt.executeQuery("SELECT *, count(*) FROM SWEGroup3DB.users WHERE username = '" + username + "'");
+        ResultSetMetaData rsmd = resultSet.getMetaData();
+        int columnsNumber = rsmd.getColumnCount();
+        while (resultSet.next()) {
+            //if the username is invalid
+            //the query did not pull any results for usernames of that string
+            if (resultSet.getString(5).equals("0")) {
+                na.sendString("invalid", true);
+                return;
+            }
+            if (resultSet.getString(2).equals(password)) {
+                na.sendString("success", true);
+                ch.getServer().addLoggedInClient(ch);
+                return;
+            } else {
+                //increment lockcount
+                int lockCount = Integer.parseInt(resultSet.getString(4).toString());
+                if (lockCount == 3) {
+                    na.sendString("locked", true);
+                    return;
+                }
+                lockCount++;
+                //need to update the lockCount in the database
+                stmt.executeQuery("UPDATE SWE.Group3DB.users SET lockcount = '" + lockCount + "' WHERE username = '" + username + "'");
+                na.sendString("invalid", true);
+            }
+        }
+    }
+
+    public String DBQuerySignedUpUsers() throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet resultSet = stmt.executeQuery("select count(*) from SWEGroup3DB.users");
+        ResultSetMetaData rsmd = resultSet.getMetaData();
+        int columnsNumber = rsmd.getColumnCount();
+        while (resultSet.next()) {
+            return (resultSet.getString(1));
+        }
+        return null;
+    }
+
+    public String DBQueryLockedOutUsers() throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet resultSet = stmt.executeQuery("SELECT username, count(*) from SWEGroup3DB.users where lockcount=3");
+        ResultSetMetaData rsmd = resultSet.getMetaData();
+        int columnsNumber = rsmd.getColumnCount();
+        String result="";
+        while (resultSet.next()) {
+            result += (resultSet.getString(1));
+            result += ",";
+        }
+        return result;
+    }
+
+    //            if (rset.next()) {
+//                System.out.println("MySQL Version: " + rset.getString(1));
+//            }
+//
+//
+//            /*
+//             * EVERYTHING THAT FOLLOWS IS DEPENDENT ON THE TABLES AND COLUMNS
+//             * THAT YOU CREATED WITHIN YOUR SCHEMA. YOU MUST MODIFY THIS CODE
+//             * TO MATCH THE DATABASE CONFIGURATION. THESE ARE ONLY EXAMPLES.
+//             */
+//            // -- a query will return a ResultSet
+//            sqlcmd = "SELECT * FROM users;";
+//            rset = stmt.executeQuery(sqlcmd);
+//
+//            // -- the metadata tells us how many columns in the data
+//            System.out.println("Table Columns:");
+//            ResultSetMetaData rsmd = rset.getMetaData();
+//            int numberOfColumns = rsmd.getColumnCount();
+//            for (int i = 1; i <= numberOfColumns; ++i) {
+//                System.out.print(rsmd.getColumnLabel(i) + "\t");
+//            }
+//            System.out.println();
+//
+//            // -- loop through the ResultSet one row at a time
+//            //    Note that the ResultSet starts at index 1
+//            while (rset.next()) {
+//                // -- loop through the columns of the ResultSet
+//                for (int i = 1; i < numberOfColumns; ++i) {
+//                    System.out.print(rset.getString(i) + "\t\t");
+//                }
+//                System.out.println();
+//            }
+//
+//            // -- select a specific username
+//            System.out.println("getting user data for ccrdoc");
+//            String selname = "ccrdoc";
+//            //        SELECT * FROM users WHERE username = 'ccrdoc'
+//            sqlcmd = "SELECT * FROM users WHERE username = '" + selname + "'";
+//            rset = stmt.executeQuery(sqlcmd);
+//            // -- loop through the ResultSet one row at a time
+//            //    Note that the ResultSet starts at index 1
+//            while (rset.next()) {
+//                // -- loop through the columns of the ResultSet
+//                for (int i = 1; i <= numberOfColumns; ++i) {
+//                    System.out.print(rset.getString(i) + "\t\t");
+//                }
+//                System.out.println();
+//            }
+//
+//
+//            // -- test an insert statement. Note that this will throw an exception if
+//            //    the key already exists in the database
+//            System.out.println("inserting into the database");
+//            String uname = "ccrdoc2";
+//            String pword = "ccrdoc1234";
+//            String email = "ccrdoc@gmail.com";
+//            try {
+//                //        INSERT INTO users VALUES('ccrdoc2', 'ccrdoc1234', 'ccrdoc@gmail.com')
+//                sqlcmd = "INSERT INTO users VALUES('" + uname + "', '" + pword + "', '" + email + "')";
+//                stmt.executeUpdate(sqlcmd);
+//            }
+//            catch (SQLException ex) {
+//                System.out.println("SQLException: " + ex.getMessage());
+//            }
+//            // UPDATE `csc335`.`users` SET `password` = '1234ccrdoc' WHERE (`username` = 'ccrdoc2');
+//            try {
+//                //        INSERT INTO users VALUES('ccrdoc2', 'ccrdoc1234', 'ccrdoc@gmail.com')
+//                sqlcmd = "UPDATE users SET password = '1234ccrdoc' WHERE (username = 'ccrdoc2')";
+//                stmt.executeUpdate(sqlcmd);
+//            }
+//            catch (SQLException ex) {
+//                System.out.println("SQLException: " + ex.getMessage());
+//            }
+//
+//            System.out.println("selecting all records from data base");
+//            sqlcmd = "SELECT * FROM users;";
+//            rset = stmt.executeQuery(sqlcmd);
+//            // -- loop through the ResultSet one row at a time
+//            //    Note that the ResultSet starts at index 1
+//            while (rset.next()) {
+//                // -- loop through the columns of the ResultSet
+//                for (int i = 1; i < numberOfColumns; ++i) {
+//                    System.out.print(rset.getString(i) + "\t\t");
+//                }
+//                System.out.println(rset.getString(numberOfColumns));
+//            }
+//
+//        } catch (SQLException ex) {
+//            // handle any errors
+//            System.out.println("SQLException: " + ex.getMessage());
+//            System.out.println("SQLState: " + ex.getSQLState());
+//            System.out.println("VendorError: " + ex.getErrorCode());
+
 
     /**
      * @param args

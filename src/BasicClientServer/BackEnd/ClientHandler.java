@@ -3,6 +3,7 @@ package BasicClientServer.BackEnd;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.sql.SQLException;
 
 
 public class ClientHandler extends Thread {
@@ -118,9 +119,11 @@ public class ClientHandler extends Thread {
 				e.printStackTrace();
 				go = false;
 				
+			} catch (SQLException throwables) {
+				throwables.printStackTrace();
 			}
 
-			
+
 		}
 	}
 }

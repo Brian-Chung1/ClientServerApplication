@@ -9,6 +9,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 
 public class ServerController extends Application {
 
@@ -36,20 +45,25 @@ public class ServerController extends Application {
     }
 
     public void QueryLoggedInUsers(MouseEvent mouseEvent) {
-
-
+        int connectedUsers = Server.getLoggedIn();
+        ServerGUIDisplay.setText("" + connectedUsers);
     }
 
-    public void QuerySignedUpUsers(MouseEvent mouseEvent) {
-
+    public void QuerySignedUpUsers(MouseEvent mouseEvent) throws SQLException {
+        DatabaseConnection db=new DatabaseConnection();
+        String result= db.DBQuerySignedUpUsers();
+        ServerGUIDisplay.setText(result);
     }
 
     public void QueryRegisteredUsers(MouseEvent mouseEvent) {
 
     }
 
-    public void QueryLockedOutUsers(MouseEvent mouseEvent) {
-
+    public void QueryLockedOutUsers(MouseEvent mouseEvent) throws SQLException {
+        DatabaseConnection db=new DatabaseConnection();
+        String result= db.DBQueryLockedOutUsers();
+        String[] users=result.split(",");
+        //print out the output on the gui
     }
 
     public void StartServer(MouseEvent mouseEvent) {

@@ -65,6 +65,8 @@ public class Server implements Runnable {
 
 	public void addClientConnection(ClientHandler client) { clientconnections.add(client); }
 
+	public void addLoggedInClient(ClientHandler client) { clientloggedin.add(client); }
+
 
 	/**
 	 * constructor creates the list of clients and
@@ -169,12 +171,12 @@ public class Server implements Runnable {
 	/**
 	 * @param args: command line arguments (unused)
 	 */
-//	public static void main (String args[])
-//	{
-//		// -- instantiate the server anonymously
-//		//    no need to keep a reference to the object since it will run in its own thread
-//		new Server();
-//	}
+	public static void main (String args[])
+	{
+		Server Server = new Server();
+		Thread serverthread = new Thread(Server);
+		serverthread.start();
+	}
 
 
 

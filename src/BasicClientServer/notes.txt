@@ -1,3 +1,5 @@
 to do list
 1) open module settings of project, set the resources package to a resource folder
 2) Stop Server when GUI is closed
+3)-Make sure the sending string for login is going...
+4)-Check why peerconnection is being called on every single button press
