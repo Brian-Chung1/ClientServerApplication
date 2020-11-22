@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #282c34;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BasicClientServer.FrontEnd.ClientGUIController">
+   <children>
+      <CheckBox fx:id="showPasswordCheckBoxAR" onMouseClicked="#togglePasswordVisibilityAR" layoutX="187.0" layoutY="232.0" mnemonicParsing="false" prefWidth="127.0" style="-fx-cursor: hand;" text="Show Password" textFill="#61dafb">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </CheckBox>
+      <Label layoutX="187.0" layoutY="33.0" text="New Account" textFill="#61dafb">
+         <font>
+            <Font name="System Bold" size="37.0" />
+         </font>
+      </Label>
+      <TextField fx:id="NewAccountUsernameTextField" layoutX="188.0" layoutY="145.0" prefHeight="34.0" prefWidth="233.0" promptText="Username" style="-fx-cursor: text;" />
+      <TextField fx:id="NewAccountPasswordShown" layoutX="188.0" layoutY="189.0" prefHeight="34.0" prefWidth="233.0" promptText="Password" style="-fx-cursor: text;" />
+      <PasswordField fx:id="NewAccountPasswordHidden" layoutX="188.0" layoutY="189.0" prefHeight="34.0" prefWidth="233.0" promptText="Password" style="-fx-cursor: text;" />
+      <Button layoutX="224.0" layoutY="257.0" mnemonicParsing="false" onMouseClicked="#AccountRegistrationEvent" prefHeight="34.0" prefWidth="174.0" style="-fx-background-color: #ffff; -fx-background-radius: 90; -fx-cursor: hand;" text="Register" />
+      <TextField fx:id="NewAccountEmailTextField" layoutX="188.0" layoutY="102.0" prefHeight="34.0" prefWidth="233.0" promptText="Email" style="-fx-cursor: text;" />
+   </children>
+</AnchorPane>

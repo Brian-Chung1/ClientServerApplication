@@ -1,5 +1,17 @@
 to do list
-1) open module settings of project, set the resources package to a resource folder
+1) open module settings of project, set the resources package to a resource folder - If fx errors occur this can fix it
 2) Stop Server when GUI is closed
 3)-Make sure the sending string for login is going...
 4)-Check why peerconnection is being called on every single button press
+
+isnt query signed up users supposed to be made same as query locked out users - brian
+
+keiths message
+We may want to just have the database as an attribute and when we construct the server it constructs and connects for the database.
+That’d make the most logical sense. I can implement it tomorrow
+
+There’s no getID for the client handler, there’s a getID but it’s from the thread API
+I remember Bryan mentioning this the other day. May be the root of wh it’s making a new fucking peer connection everytime
+bc it’s failing to retrieve the getID for the user that’s interacting or something
+It was a bug in Reinharts code
+

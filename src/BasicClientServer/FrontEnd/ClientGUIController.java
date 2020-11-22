@@ -31,19 +31,34 @@ public class ClientGUIController {
     @FXML private TextField LoginPageUsernameTextField;
 
     //Change Password Elements
+    @FXML private TextField ChangePasswordUsernameTextField;
     @FXML private TextField oldPasswordShown;
     @FXML private PasswordField oldPasswordHidden;
     @FXML private TextField newPasswordShown;
     @FXML private PasswordField newPasswordHidden;
-    @FXML private TextField reEnteredNewPasswordShown;
-    @FXML private PasswordField reEnteredNewPasswordHidden;
-    @FXML private CheckBox CPShowPasswordCheckBox;
+    @FXML private TextField ReEnteredNewPasswordShown;
+    @FXML private PasswordField ReEnteredNewPasswordHidden;
+    @FXML private CheckBox showPasswordCheckBoxCP;
+
+    //Password Recovery Elements
+    @FXML private TextField PasswordRecoveryTextField;
+
+    //Account Registration Elements
+    @FXML private TextField NewAccountEmailTextField;
+    @FXML private PasswordField NewAccountPasswordHidden;
+    @FXML private CheckBox showPasswordCheckBoxAR;
+    @FXML private TextField NewAccountPasswordShown;
+    @FXML private TextField NewAccountUsernameTextField;
+
+
+
+
 
     //Login Page Controller -------------------------------------------------------------------------------------------------------------------------
     //Opens Account Creation window upon pressing 'New Account' Button
     public void createAccountWindow(MouseEvent mouseEvent) {
         try {
-            Parent newAccount = FXMLLoader.load(getClass().getResource("/NewAccount.fxml")); //account creation page
+            Parent newAccount = FXMLLoader.load(getClass().getResource("/AccountRegistration.fxml")); //account creation page
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("New Account");
@@ -61,7 +76,7 @@ public class ClientGUIController {
     //Opens Password Recovery window upon pressing 'Forgot Password' Button
     public void forgotPasswordWindow(MouseEvent mouseEvent) {
         try {
-            Parent newAccount = FXMLLoader.load(getClass().getResource("/ForgotPassword.fxml")); //account creation page
+            Parent newAccount = FXMLLoader.load(getClass().getResource("/PasswordRecovery.fxml")); //account creation page
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Password Recovery");
@@ -108,7 +123,8 @@ public class ClientGUIController {
 
         //If the User presses login button with nothing typed in the fields then popup error message to type in shit
         String username = LoginPageUsernameTextField.getText();
-        String password = passwordHidden.getText();
+        String password = passwordHidden.getText().length() > passwordShown.getText().length() ? passwordHidden.getText() : passwordShown.getText();
+
         commandString = "login" + "," + username + "," + password;
 
         replyString = client.networkaccess.sendString(commandString, true);
@@ -193,29 +209,73 @@ public class ClientGUIController {
     //-------------------------------------------------------------------------------------------------------------------------
 
     //Change Password Window Controller ---------------------------------------------------------------------------------------
+    public void togglePasswordVisibilityCP(ActionEvent actionEvent) {
+        if(showPasswordCheckBoxCP.isSelected()){
+            System.out.println("password is now shown");
+            oldPasswordShown.setText(oldPasswordHidden.getText());
+            newPasswordShown.setText(newPasswordHidden.getText());
+            ReEnteredNewPasswordShown.setText(ReEnteredNewPasswordHidden.getText());
+            oldPasswordHidden.setVisible(false);
+            newPasswordHidden.setVisible(false);
+            ReEnteredNewPasswordHidden.setVisible(false);
+            oldPasswordShown.setVisible(true);
+            newPasswordShown.setVisible(true);
+            ReEnteredNewPasswordShown.setVisible(true);
+        } else {
+            System.out.println("password is now hidden");
+            oldPasswordHidden.setText(oldPasswordShown.getText());
+            newPasswordHidden.setText(newPasswordShown.getText());
+            ReEnteredNewPasswordHidden.setText(ReEnteredNewPasswordShown.getText());
+            oldPasswordHidden.setVisible(true);
+            newPasswordHidden.setVisible(true);
+            ReEnteredNewPasswordHidden.setVisible(true);
+            oldPasswordShown.setVisible(false);
+            newPasswordShown.setVisible(false);
+            ReEnteredNewPasswordShown.setVisible(false);
+        }
+    }
 
-    //WORK ON THIS IT IS NOT FINISHED -- HAVE TO ADD THE FUNCTION AND IDS TO FXML
-//    public void togglePasswordVisibility1(ActionEvent actionEvent) {
-//        if(showPasswordCheckBox2.isSelected()){
-//            System.out.println("password is now shown");
-//            passwordShown2.setText(passwordHidden2.getText());
-//            passwordShown2.setVisible(true);
-//            passwordHidden2.setVisible(false);
-//            return;
-//        } else {
-//            System.out.println("password is now hidden");
-//            passwordHidden2.setText(passwordShown2.getText());
-//            passwordHidden2.setVisible(true);
-//            passwordShown2.setVisible(false);
-//        }
-//
-//
-//    }
+    public void ChangePasswordEvent(MouseEvent mouseEvent) {
+        String username = ChangePasswordUsernameTextField.getText();
+        String oldPassword = oldPasswordHidden.getText().length() > oldPasswordShown.getText().length() ? oldPasswordHidden.getText() : oldPasswordShown.getText();
+        String newPassword = newPasswordHidden.getText().length() > newPasswordShown.getText().length() ? newPasswordHidden.getText() : newPasswordShown.getText();
+        String ReEnteredNewPassword = ReEnteredNewPasswordHidden.getText().length() > ReEnteredNewPasswordShown.getText().length() ? ReEnteredNewPasswordHidden.getText() : ReEnteredNewPasswordShown.getText();
+
+        //if the fields are empty or missing we return an error message
+        if(username.isBlank() || oldPassword.isBlank() || newPassword.isBlank() || ReEnteredNewPassword.isBlank()) {
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setTitle("Missing Fields");
+            error.setContentText("Please Enter your information in all appropriate fields");
+            error.setHeaderText(null);
+            error.showAndWait();
+            return;
+        }
+
+        //if the new password entries do not match we return an error message
+        if(!newPassword.equals(ReEnteredNewPassword)) {
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setTitle("Password Does Not Match");
+            error.setContentText("Make sure that both New Password Entries Match");
+            error.setHeaderText(null);
+            error.showAndWait();
+            return;
+        }
+
+
+    }
+
+
+
 
     // ------------------------------------------------------------------------------------------------------------------------
 
 
-    //Forgot Password Window Controller ---------------------------------------------------------------------------------------
+    //Password Recovery Window Controller ---------------------------------------------------------------------------------------
+    public void PasswordRecoveryEvent(MouseEvent mouseEvent) {
+        String userInfo = PasswordRecoveryTextField.getText();
+
+    }
+
 
 
     // ------------------------------------------------------------------------------------------------------------------------
@@ -224,11 +284,94 @@ public class ClientGUIController {
     //New Account Window Controller -------------------------------------------------------------------------------------------
 
 
+    public void AccountRegistrationEvent(MouseEvent mouseEvent) {
+        String email = NewAccountEmailTextField.getText();
+        String username = NewAccountUsernameTextField.getText();
+        String password = NewAccountPasswordHidden.getText().length() > NewAccountPasswordShown.getText().length() ? NewAccountPasswordHidden.getText() : NewAccountPasswordShown.getText();
+
+        if(email.isBlank() || username.isBlank() || password.isBlank()) {
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setTitle("Missing Fields");
+            error.setContentText("Please Enter your information in all appropriate fields");
+            error.setHeaderText(null);
+            error.showAndWait();
+            return;
+        }
+
+
+
+    }
+
+    public void togglePasswordVisibilityAR(MouseEvent mouseEvent) {
+        if(showPasswordCheckBoxAR.isSelected()){
+            System.out.println("password is now shown");
+            NewAccountPasswordShown.setText(NewAccountPasswordHidden.getText());
+            NewAccountPasswordShown.setVisible(true);
+            NewAccountPasswordHidden.setVisible(false);
+        } else {
+            System.out.println("password is now hidden");
+            NewAccountPasswordHidden.setText(NewAccountPasswordShown.getText());
+            NewAccountPasswordHidden.setVisible(true);
+            NewAccountPasswordShown.setVisible(false);
+        }
+
+    }
+
+
+
     // ------------------------------------------------------------------------------------------------------------------------
 
 
     //Main Application Window Controller ---------------------------------------------------------------------------------------
+    //Calls Disconnect From Server Method Located in Login Page Controller Tab
 
+    public void AccountLogoutEvent(MouseEvent mouseEvent) {
+        // -- send message to server and receive reply.
+        String commandString;
+        String replyString;
+
+        commandString = "logout";
+
+        replyString = client.networkaccess.sendString(commandString, true);
+
+        //Change this later - this was copied and pasted from elsewhere as boilerplate
+//        if(replyString.equals("success")) {
+//            try {
+//                ((Node)(mouseEvent.getSource())).getScene().getWindow().hide();
+//                Parent loginPage = FXMLLoader.load(getClass().getResource("/MainApplication.fxml")); //main application page
+//                Stage stage = new Stage();
+//                stage.setTitle("Main Application");
+//                stage.setScene(new Scene(loginPage, 721, 475));
+//                stage.show();
+//
+//            }
+//            catch (IOException e) {
+//                e.printStackTrace();
+//                System.out.println("Caught exception");
+//            }
+//        } else {
+//            //display an error message
+//            Alert error = new Alert(Alert.AlertType.ERROR);
+//            error.setTitle("Login Error");
+//            error.setContentText("Please Re-Enter your Username and Password");
+//            error.setHeaderText(null);
+//            error.showAndWait();
+//        }
+    }
+
+    public void changePasswordWindow(MouseEvent mouseEvent) {
+        try {
+            Parent newAccount = FXMLLoader.load(getClass().getResource("/ChangePassword.fxml")); //account creation page
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Change Password");
+            stage.setScene(new Scene(newAccount, 685, 485));
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     // ------------------------------------------------------------------------------------------------------------------------
 }
