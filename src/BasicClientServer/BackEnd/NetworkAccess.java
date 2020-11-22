@@ -141,13 +141,9 @@ public class NetworkAccess {
 					
 				} while (rtnmsg.equals(""));
 			}						
-		} catch (SocketException e) {
-			
+		}  catch (IOException e) {
 			e.printStackTrace();
-//			System.exit(1);
-			
-		} catch (Exception x) {
-//			System.exit(1);
+			System.exit(1);
 		}
 		
 		return rtnmsg;

@@ -2,6 +2,7 @@ package BasicClientServer.BackEnd;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 
 public class ClientHandler extends Thread {
@@ -108,13 +109,17 @@ public class ClientHandler extends Thread {
 				//    this is where all the server side Use Cases will be handled
 				
 				CommandProtocol.processCommand(cmd, networkaccess, this);
-			} 
+			}
+			catch (SocketException s) {
+
+			}
 			catch (IOException e) {
 				
 				e.printStackTrace();
 				go = false;
 				
 			}
+
 			
 		}
 	}

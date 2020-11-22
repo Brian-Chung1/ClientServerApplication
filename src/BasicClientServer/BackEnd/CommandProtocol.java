@@ -30,6 +30,8 @@ public class CommandProtocol {
 	 */
 	public static void processCommand(String cmd, NetworkAccess na, ClientHandler ch)
 	{
+		String[] commandString = cmd.split(",");
+		cmd = commandString[0];
 		System.out.println("SERVER receive: " + cmd);
 		
 		if (cmd.equals("disconnect")) {
@@ -43,6 +45,32 @@ public class CommandProtocol {
 			na.sendString("Success", true);
 			ch.getServer().peerconnection(na.getSocket());
 			
+		}
+		else if (cmd.equals("login")) {
+			String username = commandString[1];
+			String password = commandString[2];
+
+			//database checking
+
+			
+
+		}
+		else if (cmd.equals("logout")) {
+
+		}
+		else if (cmd.equals("changepassword")) {
+			String username = commandString[1];
+			String oldPassword = commandString[2];
+			String newPassword = commandString[3];
+
+		}
+		else if (cmd.equals("forgotpassword")) {
+
+		}
+		else if (cmd.equals("newaccount")) {
+			String username = commandString[1];
+			String password = commandString[2];
+			String email = commandString[3];
 		}
 		else {
 			

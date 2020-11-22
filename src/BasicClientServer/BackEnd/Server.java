@@ -3,6 +3,7 @@ package BasicClientServer.BackEnd;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Vector;
 
 /*
@@ -105,6 +106,7 @@ public class Server implements Runnable {
 				peerconnection(socket);
 			}
 		}
+
 		catch (IOException e) {
 
 			e.printStackTrace();

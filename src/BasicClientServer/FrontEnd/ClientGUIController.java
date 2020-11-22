@@ -1,7 +1,6 @@
 package BasicClientServer.FrontEnd;
 
 import BasicClientServer.BackEnd.Client;
-import BasicClientServer.BackEnd.NetworkAccess;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,8 +28,18 @@ public class ClientGUIController {
     @FXML private TextField passwordShown;
     @FXML private PasswordField passwordHidden;
     @FXML private CheckBox showPasswordCheckBox;
+    @FXML private TextField LoginPageUsernameTextField;
 
-    //Login Page Controller
+    //Change Password Elements
+    @FXML private TextField oldPasswordShown;
+    @FXML private PasswordField oldPasswordHidden;
+    @FXML private TextField newPasswordShown;
+    @FXML private PasswordField newPasswordHidden;
+    @FXML private TextField reEnteredNewPasswordShown;
+    @FXML private PasswordField reEnteredNewPasswordHidden;
+    @FXML private CheckBox CPShowPasswordCheckBox;
+
+    //Login Page Controller -------------------------------------------------------------------------------------------------------------------------
     //Opens Account Creation window upon pressing 'New Account' Button
     public void createAccountWindow(MouseEvent mouseEvent) {
         try {
@@ -92,8 +101,46 @@ public class ClientGUIController {
         ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
     }
 
+    public void AccountLoginEvent(MouseEvent mouseEvent) {
+        // -- send message to server and receive reply.
+        String commandString;
+        String userInformationString;
+        String replyString;
 
-    //Connect Window Controller
+        //If the User presses login button with nothing typed in the fields then popup error message to type in shit
+        String username = LoginPageUsernameTextField.getText();
+        String password = passwordHidden.getText();
+        commandString = "login" + "," + username + "," + password;
+
+        replyString = client.networkaccess.sendString(commandString, true);
+
+        if(replyString.equals("Success")) {
+            try {
+                ((Node)(mouseEvent.getSource())).getScene().getWindow().hide();
+                Parent loginPage = FXMLLoader.load(getClass().getResource("/MainApplication.fxml")); //main application page
+                Stage stage = new Stage();
+                stage.setTitle("Main Application");
+                stage.setScene(new Scene(loginPage, 721, 475));
+                stage.show();
+
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Caught exception");
+            }
+        } else {
+            //display an error message
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setTitle("Login Error");
+            error.setContentText("Please Re-Enter your Username and Password");
+            error.setHeaderText(null);
+            error.showAndWait();
+        }
+    }
+
+    //-------------------------------------------------------------------------------------------------------------------------
+
+    //Connect Window Controller -----------------------------------------------------------------------------------------------
     public void connectToServer(MouseEvent mouseEvent) {
         String host = IPTextField.getText();
         if(host == "") return;
@@ -143,4 +190,46 @@ public class ClientGUIController {
 
     }
 
+
+    //-------------------------------------------------------------------------------------------------------------------------
+
+    //Change Password Window Controller ---------------------------------------------------------------------------------------
+
+    //WORK ON THIS IT IS NOT FINISHED -- HAVE TO ADD THE FUNCTION AND IDS TO FXML
+//    public void togglePasswordVisibility1(ActionEvent actionEvent) {
+//        if(showPasswordCheckBox2.isSelected()){
+//            System.out.println("password is now shown");
+//            passwordShown2.setText(passwordHidden2.getText());
+//            passwordShown2.setVisible(true);
+//            passwordHidden2.setVisible(false);
+//            return;
+//        } else {
+//            System.out.println("password is now hidden");
+//            passwordHidden2.setText(passwordShown2.getText());
+//            passwordHidden2.setVisible(true);
+//            passwordShown2.setVisible(false);
+//        }
+//
+//
+//    }
+
+    // ------------------------------------------------------------------------------------------------------------------------
+
+
+    //Forgot Password Window Controller ---------------------------------------------------------------------------------------
+
+
+    // ------------------------------------------------------------------------------------------------------------------------
+
+
+    //New Account Window Controller -------------------------------------------------------------------------------------------
+
+
+    // ------------------------------------------------------------------------------------------------------------------------
+
+
+    //Main Application Window Controller ---------------------------------------------------------------------------------------
+
+
+    // ------------------------------------------------------------------------------------------------------------------------
 }

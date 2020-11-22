@@ -4,6 +4,7 @@ module ClientServerApplication {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.web;
+    requires java.sql;
 
     exports BasicClientServer.BackEnd;
 
