@@ -44,29 +44,32 @@ public class ServerController extends Application {
     //ServerGUIDisplay.appendText("some text here" + "\n"); The "\n" will add a new line
 
 
-    public void QueryConnectedUsers(MouseEvent mouseEvent) {
+    public void QueryConnectedUsers(MouseEvent mouseEvent) { //Number of Connected Users
         int connectedUsers = Server.getConnections();
         ServerGUIDisplay.setText("" + connectedUsers);
     }
 
-    public void QueryLoggedInUsers(MouseEvent mouseEvent) {
+    public void QueryLoggedInUsers(MouseEvent mouseEvent) { //Number of Logged In Users
         int connectedUsers = Server.getLoggedIn();
         ServerGUIDisplay.setText("" + connectedUsers);
     }
 
-    public void QuerySignedUpUsers(MouseEvent mouseEvent) throws SQLException {
-        DatabaseConnection db = new DatabaseConnection();
-        String result = db.DBQuerySignedUpUsers();
+    public void QuerySignedUpUsers(MouseEvent mouseEvent) throws SQLException { //Show List of Signed Up Users
+        String result = Server.getDB().DBQuerySignedUpUsers();
+        String[] users = result.split(",");
+
+        for(String user : users) {
+            ServerGUIDisplay.appendText(user + "\n");
+        }
+    }
+
+    public void QueryRegisteredUsers(MouseEvent mouseEvent) throws SQLException { //Number of Signed Up Users
+        String result = Server.getDB().DBQueryRegisteredUsers();
         ServerGUIDisplay.appendText(result + "\n");
     }
 
-    public void QueryRegisteredUsers(MouseEvent mouseEvent) {
-
-    }
-
-    public void QueryLockedOutUsers(MouseEvent mouseEvent) throws SQLException {
-        DatabaseConnection db = new DatabaseConnection();
-        String result = db.DBQueryLockedOutUsers();
+    public void QueryLockedOutUsers(MouseEvent mouseEvent) throws SQLException { //Show List of Locked Out Users
+        String result = Server.getDB().DBQueryLockedOutUsers();
         String[] users = result.split(",");
 
         for(String user : users) {

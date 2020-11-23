@@ -77,7 +77,7 @@ public class DatabaseConnection {
         }
     }
 
-    public String DBQuerySignedUpUsers() throws SQLException {
+    public String DBQueryRegisteredUsers() throws SQLException {
         Statement stmt = conn.createStatement();
         ResultSet resultSet = stmt.executeQuery("select count(*) from SWEGroup3DB.users");
         ResultSetMetaData rsmd = resultSet.getMetaData();
@@ -86,6 +86,18 @@ public class DatabaseConnection {
             return (resultSet.getString(1));
         }
         return null;
+    }
+
+    public String DBQuerySignedUpUsers() throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet resultSet = stmt.executeQuery("select * from SWEGroup3DB.users");
+        ResultSetMetaData rsmd = resultSet.getMetaData();
+        int columnsNumber = rsmd.getColumnCount();
+        String result="";
+        while (resultSet.next()) {
+            result += (resultSet.getString(1)) + ",";
+        }
+        return result;
     }
 
     public String DBQueryLockedOutUsers() throws SQLException {

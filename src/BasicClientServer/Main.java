@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    //test push
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent loginPage = FXMLLoader.load(getClass().getResource("resources/LoginPage.fxml")); //login page

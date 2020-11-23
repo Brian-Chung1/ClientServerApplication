@@ -46,7 +46,7 @@ public class Client {
 	{
     	String text = "disconnect";
 		networkaccess.sendString(text,  false);
-		networkaccess.close();		
+		networkaccess.close();
 	}
 	
 	

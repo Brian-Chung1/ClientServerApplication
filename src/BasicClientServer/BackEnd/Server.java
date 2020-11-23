@@ -67,6 +67,9 @@ public class Server implements Runnable {
 
 	public void addLoggedInClient(ClientHandler client) { clientloggedin.add(client); }
 
+	private DatabaseConnection Database;
+
+	public DatabaseConnection getDB() { return Database; }
 
 	/**
 	 * constructor creates the list of clients and
@@ -77,8 +80,10 @@ public class Server implements Runnable {
 
 		// -- construct the list of active client threads
 		clientconnections = new Vector<ClientHandler>();
-
+		this.Database = new DatabaseConnection();
 	}
+
+
 
 	/**
 	 * listen for incoming client connections

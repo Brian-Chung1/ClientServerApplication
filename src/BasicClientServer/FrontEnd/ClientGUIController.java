@@ -109,8 +109,7 @@ public class ClientGUIController {
     //Disconnects from server upon pressing 'Disconnect' Button
     public void disconnectFromServer(MouseEvent mouseEvent) {
         System.out.println("pressed disconnect");
-        String commandString = "disconnect";
-        client.networkaccess.sendString(commandString, false);
+        client.disconnect();
 
         //close the GUI
         ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
@@ -163,7 +162,6 @@ public class ClientGUIController {
         // -- instantiate a Client object
         //    the constructor will attempt to connect to the server
         client = new Client(host, port);
-
 
         // -- send message to server and receive reply.
         String commandString;
@@ -324,6 +322,7 @@ public class ClientGUIController {
 
     //Main Application Window Controller ---------------------------------------------------------------------------------------
     //Calls Disconnect From Server Method Located in Login Page Controller Tab
+    //Create new function that calls log out and then it will call disconnect
 
     public void AccountLogoutEvent(MouseEvent mouseEvent) {
         // -- send message to server and receive reply.
