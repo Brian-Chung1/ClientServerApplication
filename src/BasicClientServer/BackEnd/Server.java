@@ -75,7 +75,6 @@ public class Server implements Runnable {
 	 */
 	public Server ()
 	{
-
 		// -- construct the list of active client threads
 		clientconnections = new Vector<ClientHandler>();
 		clientloggedin = new Vector<ClientHandler>();
