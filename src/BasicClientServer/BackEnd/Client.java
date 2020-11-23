@@ -44,8 +44,7 @@ public class Client {
 	 */
 	public void disconnect ()
 	{
-    	String text = "disconnect";
-		networkaccess.sendString(text,  false);
+		networkaccess.sendString("disconnect",  false);
 		networkaccess.close();
 	}
 	

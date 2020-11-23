@@ -63,8 +63,6 @@ public class Server implements Runnable {
 
 	public int getLoggedIn() { return clientloggedin.size(); }
 
-	public void addClientConnection(ClientHandler client) { clientconnections.add(client); }
-
 	public void addLoggedInClient(ClientHandler client) { clientloggedin.add(client); }
 
 	private DatabaseConnection Database;
@@ -80,6 +78,7 @@ public class Server implements Runnable {
 
 		// -- construct the list of active client threads
 		clientconnections = new Vector<ClientHandler>();
+		clientloggedin = new Vector<ClientHandler>();
 		this.Database = new DatabaseConnection();
 	}
 
@@ -167,6 +166,17 @@ public class Server implements Runnable {
 				// -- place some text in the area to let the server operator know
 				//    what is going on
 				System.out.println("SERVER: connection closed for client id " + id + "\n");
+				break;
+			}
+		}
+	}
+
+	public void removeLoggedInClient(ClientHandler ch)
+	{
+		for (int i = 0; i < clientloggedin.size(); ++i) {
+			if (ch == clientloggedin.get(i)) {
+				clientloggedin.remove(i);
+				System.out.println("SERVER: Removed Client From Logged In Vector");
 				break;
 			}
 		}

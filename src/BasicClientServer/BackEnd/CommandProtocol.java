@@ -36,21 +36,20 @@ public class CommandProtocol {
 		String[] commandString = cmd.split(",");
 		cmd = commandString[0];
 		System.out.println("SERVER receive: " + cmd);
-		
+
 		if (cmd.equals("disconnect")) {
 			na.close();
 			ch.getServer().removeClientConnection(ch.getID());
 			ch.Stop();
 		}
 		else if (cmd.equals("connect")) {
-			System.out.println("Command Processor has received Connect");
-			na.sendString("Success", true);
-			ch.getServer().peerconnection(na.getSocket());
+			na.sendString("Success", false);
 		}
 		else if (cmd.equals("login")) {
-			System.out.println("System has received login");
 			String username = commandString[1];
 			String password = commandString[2];
+			na.sendString("Success", false);
+			ch.getServer().addLoggedInClient(ch);
 
 			//database checking
 			DatabaseConnection db=new DatabaseConnection();
@@ -58,8 +57,8 @@ public class CommandProtocol {
 		}
 
 		else if (cmd.equals("logout")) {
-			//dont forget to delete them from the logged client vector in databaseconnection function in server
 
+			ch.getServer().removeLoggedInClient(ch);
 		}
 		else if (cmd.equals("changepassword")) {
 			String username = commandString[1];

@@ -71,7 +71,8 @@ public class DatabaseConnection {
                 }
                 lockCount++;
                 //need to update the lockCount in the database
-                stmt.executeQuery("UPDATE SWE.Group3DB.users SET lockcount = '" + lockCount + "' WHERE username = '" + username + "'");
+//                stmt.executeUpdate("UPDATE SWE.Group3DB.users SET lockcount = '" + lockCount + "' WHERE username = '" + username + "'"); fix this
+//                You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.users SET lockcount = '1' WHERE username = 'keith'' at line 1
                 na.sendString("invalid", true);
             }
         }

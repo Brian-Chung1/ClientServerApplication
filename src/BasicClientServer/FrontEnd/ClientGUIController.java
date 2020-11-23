@@ -128,13 +128,13 @@ public class ClientGUIController {
 
         replyString = client.networkaccess.sendString(commandString, true);
 
-        if(replyString.equals("success")) {
+        if(replyString.equals("Success")) {
             try {
                 ((Node)(mouseEvent.getSource())).getScene().getWindow().hide();
                 Parent loginPage = FXMLLoader.load(getClass().getResource("/MainApplication.fxml")); //main application page
                 Stage stage = new Stage();
                 stage.setTitle("Main Application");
-                stage.setScene(new Scene(loginPage, 721, 475));
+                stage.setScene(new Scene(loginPage, 753, 497));
                 stage.show();
 
             }
@@ -167,12 +167,6 @@ public class ClientGUIController {
         String commandString;
         String replyString;
 
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            };
-
         // -- send a String to the server and wait for the response
         commandString = "connect";
         replyString = client.networkaccess.sendString(commandString, true);
@@ -199,6 +193,7 @@ public class ClientGUIController {
             error.setHeaderText(null);
             error.showAndWait();
         }
+
 
 
     }
