@@ -45,16 +45,19 @@ public class ServerController extends Application {
 
 
     public void QueryConnectedUsers(MouseEvent mouseEvent) { //Number of Connected Users
+        clearDisplay(ServerGUIDisplay);
         int connectedUsers = Server.getConnections();
         ServerGUIDisplay.setText("" + connectedUsers);
     }
 
     public void QueryLoggedInUsers(MouseEvent mouseEvent) { //Number of Logged In Users
+        clearDisplay(ServerGUIDisplay);
         int connectedUsers = Server.getLoggedIn();
         ServerGUIDisplay.setText("" + connectedUsers);
     }
 
     public void QuerySignedUpUsers(MouseEvent mouseEvent) throws SQLException { //Show List of Signed Up Users
+        clearDisplay(ServerGUIDisplay);
         String result = Server.getDB().DBQuerySignedUpUsers();
         String[] users = result.split(",");
 
@@ -64,11 +67,13 @@ public class ServerController extends Application {
     }
 
     public void QueryRegisteredUsers(MouseEvent mouseEvent) throws SQLException { //Number of Signed Up Users
+        clearDisplay(ServerGUIDisplay);
         String result = Server.getDB().DBQueryRegisteredUsers();
         ServerGUIDisplay.appendText(result + "\n");
     }
 
     public void QueryLockedOutUsers(MouseEvent mouseEvent) throws SQLException { //Show List of Locked Out Users
+        clearDisplay(ServerGUIDisplay);
         String result = Server.getDB().DBQueryLockedOutUsers();
         String[] users = result.split(",");
 
@@ -76,6 +81,9 @@ public class ServerController extends Application {
             ServerGUIDisplay.appendText(user + "\n");
         }
     }
+
+    public void clearDisplay(TextArea Display) { Display.clear(); }
+
 
     public void StartServer(MouseEvent mouseEvent) {
         Server = new Server();

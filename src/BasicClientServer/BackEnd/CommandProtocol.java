@@ -57,7 +57,6 @@ public class CommandProtocol {
 		}
 
 		else if (cmd.equals("logout")) {
-
 			ch.getServer().removeLoggedInClient(ch);
 		}
 		else if (cmd.equals("changepassword")) {
