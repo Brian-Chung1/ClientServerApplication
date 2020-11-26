@@ -42,7 +42,7 @@ public class DatabaseConnection {
 
         }
         catch(Exception e){
-            System.out.println("no workie");
+            System.out.println("Database failed to connect");
         }
     }
 
@@ -55,25 +55,25 @@ public class DatabaseConnection {
             //if the username is invalid
             //the query did not pull any results for usernames of that string
             if (resultSet.getString(5).equals("0")) {
-                na.sendString("invalid", true);
+                na.sendString("Invalid", false);
                 return;
             }
             if (resultSet.getString(2).equals(password)) {
-                na.sendString("success", true);
+                na.sendString("Success", false);
                 ch.getServer().addLoggedInClient(ch);
                 return;
             } else {
                 //increment lockcount
                 int lockCount = Integer.parseInt(resultSet.getString(4).toString());
                 if (lockCount == 3) {
-                    na.sendString("locked", true);
+                    na.sendString("Locked", false);
                     return;
                 }
                 lockCount++;
                 //need to update the lockCount in the database
 //                stmt.executeUpdate("UPDATE SWE.Group3DB.users SET lockcount = '" + lockCount + "' WHERE username = '" + username + "'"); fix this
 //                You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.users SET lockcount = '1' WHERE username = 'keith'' at line 1
-                na.sendString("invalid", true);
+                na.sendString("invalid", false);
             }
         }
     }
@@ -114,7 +114,65 @@ public class DatabaseConnection {
         return result;
     }
 
-    //            if (rset.next()) {
+    public void processPasswordRecovery(String username, NetworkAccess na, ClientHandler ch) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet resultSet = stmt.executeQuery("SELECT email, password, count(*) FROM SWEGroup3DB.users WHERE username = '" + username + "'");
+        ResultSetMetaData rsmd = resultSet.getMetaData();
+        if(resultSet.next()) {
+            if(resultSet.getString(3).equals("1")) {
+                SendEmailGmailSMTP.sendMail(resultSet.getString(1), resultSet.getString(2)); //Sending password to Email
+                try {
+                    stmt.executeUpdate("UPDATE SWEGroup3DB.users SET lockcount = 0 WHERE username = '" + username + "'"); //Resetting Lock count to 0
+                } catch(SQLException e) {
+                    System.out.println("Caught Exception after update");
+                }
+                na.sendString("Success", false);
+            } else if(resultSet.getString(3).equals("0")) {
+                na.sendString("Failed", false);
+            }
+        }
+
+    }
+
+    public void processAccountCreation(String email, String username, String password, NetworkAccess na, ClientHandler ch) throws SQLException {
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute("INSERT INTO SWEGroup3DB.users (username, email, password, lockcount) VALUES ('" + username + "', '" + email + "', '" + password + "', 0)");
+            na.sendString("Success", false);
+        } catch(SQLException e) {
+            na.sendString("Failed", false); //User already exists
+        }
+    }
+
+    public void processChangePassword(String username, String oldPassword, String newPassword, NetworkAccess na, ClientHandler ch) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet resultSet = stmt.executeQuery("SELECT username, password FROM SWEGroup3DB.users WHERE username = '" + username + "'");
+        ResultSetMetaData rsmd = resultSet.getMetaData();
+        if(resultSet.next()) {
+            if(resultSet.getString(1).equals(username)) {
+                if(resultSet.getString(2).equals(oldPassword)) {
+                    try {
+                        stmt.execute("UPDATE SWEGroup3DB.users SET password = '" + newPassword + "' WHERE username = '" + username + "'");
+                    } catch(SQLException e) {
+                        System.out.println("Change Password SQL Execute Error");
+                    }
+                    na.sendString("Success", false);
+                } else {
+                    na.sendString("WrongOldPassword", false);
+                }
+                na.sendString("Success", false);
+            } else if(!resultSet.getString(1).equals(username)) {
+                na.sendString("WrongUsername", false);
+            }
+        }
+    }
+
+
+
+
+
+
+        //            if (rset.next()) {
 //                System.out.println("MySQL Version: " + rset.getString(1));
 //            }
 //

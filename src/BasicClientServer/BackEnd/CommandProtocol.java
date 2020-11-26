@@ -52,7 +52,7 @@ public class CommandProtocol {
 			ch.getServer().addLoggedInClient(ch);
 
 			//database checking
-			DatabaseConnection db=new DatabaseConnection();
+			DatabaseConnection db = ch.getServer().getDB();
 			db.processLogin(username,password,na, ch);
 		}
 
@@ -64,15 +64,21 @@ public class CommandProtocol {
 			String oldPassword = commandString[2];
 			String newPassword = commandString[3];
 
-		}
-		else if (cmd.equals("forgotpassword")) {
-			//make sure we set lockcount = 0 if forgotpassword is successful
+			DatabaseConnection db = ch.getServer().getDB();
+			db.processChangePassword(username, oldPassword, newPassword, na, ch);
 
 		}
-		else if (cmd.equals("newaccount")) {
+		else if (cmd.equals("forgotpassword")) {
 			String username = commandString[1];
-			String password = commandString[2];
-			String email = commandString[3];
+			DatabaseConnection db = ch.getServer().getDB();
+			db.processPasswordRecovery(username, na, ch);
+		}
+		else if (cmd.equals("newaccount")) {
+			String email = commandString[1];
+			String username = commandString[2];
+			String password = commandString[3];
+			DatabaseConnection db = ch.getServer().getDB();
+			db.processAccountCreation(email, username, password, na, ch);
 		}
 		else {
 			

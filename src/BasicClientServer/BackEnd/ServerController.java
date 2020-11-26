@@ -47,20 +47,20 @@ public class ServerController extends Application {
     public void QueryConnectedUsers(MouseEvent mouseEvent) { //Number of Connected Users
         clearDisplay(ServerGUIDisplay);
         int connectedUsers = Server.getConnections();
-        ServerGUIDisplay.setText("" + connectedUsers);
+        ServerGUIDisplay.setText("Connected Users: " + connectedUsers);
     }
 
     public void QueryLoggedInUsers(MouseEvent mouseEvent) { //Number of Logged In Users
         clearDisplay(ServerGUIDisplay);
         int connectedUsers = Server.getLoggedIn();
-        ServerGUIDisplay.setText("" + connectedUsers);
+        ServerGUIDisplay.setText("Logged In Users: " + connectedUsers);
     }
 
     public void QuerySignedUpUsers(MouseEvent mouseEvent) throws SQLException { //Show List of Signed Up Users
         clearDisplay(ServerGUIDisplay);
         String result = Server.getDB().DBQuerySignedUpUsers();
         String[] users = result.split(",");
-
+        ServerGUIDisplay.appendText("Signed Up Users" + "\n");
         for(String user : users) {
             ServerGUIDisplay.appendText(user + "\n");
         }
@@ -69,14 +69,14 @@ public class ServerController extends Application {
     public void QueryRegisteredUsers(MouseEvent mouseEvent) throws SQLException { //Number of Signed Up Users
         clearDisplay(ServerGUIDisplay);
         String result = Server.getDB().DBQueryRegisteredUsers();
-        ServerGUIDisplay.appendText(result + "\n");
+        ServerGUIDisplay.appendText("Registered Users: " + result);
     }
 
     public void QueryLockedOutUsers(MouseEvent mouseEvent) throws SQLException { //Show List of Locked Out Users
         clearDisplay(ServerGUIDisplay);
         String result = Server.getDB().DBQueryLockedOutUsers();
         String[] users = result.split(",");
-
+        ServerGUIDisplay.appendText("Locked Out Users" + "\n");
         for(String user : users) {
             ServerGUIDisplay.appendText(user + "\n");
         }

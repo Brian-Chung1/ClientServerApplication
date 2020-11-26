@@ -1,6 +1,8 @@
 package BasicClientServer.FrontEnd;
 
 import BasicClientServer.BackEnd.Client;
+import BasicClientServer.BackEnd.RegexValidation;
+import BasicClientServer.BackEnd.SendEmailGmailSMTP;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -105,6 +107,9 @@ public class ClientGUIController {
         if(replyString.equals("Success")) {
             ((Node)(mouseEvent.getSource())).getScene().getWindow().hide();
             loadWindow("/MainApplication.fxml", "Main Application", 753, 497);
+        } else if(replyString.equals("Locked")) {
+            alertError("Account Locked Out", "Your account is locked out after 3 failed attempts \n Please go to Password Recovery to reset your Account");
+
         } else {
             alertError("Login Error", "Please Re-Enter your Username and Password");
         }
@@ -175,6 +180,26 @@ public class ClientGUIController {
             return;
         }
 
+        if(!RegexValidation.validSimplePassword(newPassword)) {
+            alertInformation("Invalid Format", "Password Incorrect Format", " It must have at least one digit \n It must have at least one upper or lower case letter \n It must be at least 8 characters long");
+            return;
+        }
+
+        String commandString;
+        String replyString;
+
+        // -- send a String to the server and wait for the response
+        commandString = "changepassword" + "," + username + "," + oldPassword + "," + newPassword;
+        replyString = client.networkaccess.sendString(commandString, true);
+
+        if(replyString.equals("Success")) { //Message is not sending for some reason
+            alertInformation("Success", "Password Successfully Changed", "");
+            //after pressing okay make the password change window close -- TO ADD
+        } else if(replyString.equals("WrongOldPassword")) {
+            alertError("Invalid Password", "The password you entered for your account is incorrect");
+        } else if(replyString.equals("WrongUsername")) {
+            alertError("Invalid Username", "Username does not exist");
+        }
 
     }
 
@@ -186,12 +211,27 @@ public class ClientGUIController {
 
     //Password Recovery Window Controller ---------------------------------------------------------------------------------------
     public void PasswordRecoveryEvent(MouseEvent mouseEvent) {
-        String userInfo = PasswordRecoveryTextField.getText();
+        String username = PasswordRecoveryTextField.getText();
 
-        if(userInfo.isBlank()) {
+        if(username.isBlank()) {
             alertError("Missing Fields", "Please Enter your information in all appropriate fields");
             return;
         }
+
+        String commandString;
+        String replyString;
+
+        // -- send a String to the server and wait for the response
+        commandString = "forgotpassword" + "," + username;
+        replyString = client.networkaccess.sendString(commandString, true);
+
+        if(replyString.equals("Success")) {
+            alertInformation("Success", "Email has been sent", null);
+            //after pressing okay make the password recovery window close -- TO ADD
+        } else {
+            alertError("Error", "Please re-enter your username and make sure it is valid");
+        }
+
     }
 
 
@@ -210,6 +250,30 @@ public class ClientGUIController {
         if(email.isBlank() || username.isBlank() || password.isBlank()) {
             alertError("Missing Fields", "Please Enter your information in all appropriate fields");
             return;
+        }
+
+        if(!RegexValidation.validEmailAddress(email)) {
+            alertInformation("Invalid Format", "Email Address Incorrect Format", "Make sure the email address is valid and properly typed");
+            return;
+        }
+
+        if(!RegexValidation.validSimplePassword(password)) {
+            alertInformation("Invalid Format", "Password Incorrect Format", " It must have at least one digit \n It must have at least one upper or lower case letter \n It must be at least 8 characters long");
+            return;
+        }
+
+        String commandString;
+        String replyString;
+
+        // -- send a String to the server and wait for the response
+        commandString = "newaccount" + "," + email + "," + username + "," + password;
+        replyString = client.networkaccess.sendString(commandString, true);
+
+        if(replyString.equals("Success")) {
+            ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
+            alertInformation("Success", "Your account has been created", "");
+        } else {
+            alertError("Account Creation Failed", "User with username: " + username + "already exists \n Please create a new account with a different username");
         }
 
 
@@ -232,8 +296,12 @@ public class ClientGUIController {
     //Main Application Window Controller ---------------------------------------------------------------------------------------
     //Calls Disconnect From Server Method Located in Login Page Controller Tab
 
-    public void disconnectAndLogout(MouseEvent mouseEvent) { //I dont know if this would work but we have to test it
-        AccountLogoutEvent(mouseEvent);
+    public void disconnectAndLogout(MouseEvent mouseEvent) {
+        String commandString;
+        String replyString;
+        commandString = "logout";
+        replyString = client.networkaccess.sendString(commandString, false);
+        ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
         disconnectFromServer(mouseEvent);
     }
 
@@ -243,15 +311,11 @@ public class ClientGUIController {
         String replyString;
 
         commandString = "logout";
+        replyString = client.networkaccess.sendString(commandString, false);
 
-        replyString = client.networkaccess.sendString(commandString, true);
+        ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
+        loadWindow("/LoginPage.fxml", "Login Page", 721, 475);
 
-        if(replyString.equals("Success")) {
-            ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
-            loadWindow("/LoginPage.fxml", "Login Page", 721, 475);
-        } else {
-            alertError("Logout Error", "You are currently disconnected already");
-        }
     }
 
     public void changePasswordWindow(MouseEvent mouseEvent) {
@@ -266,6 +330,14 @@ public class ClientGUIController {
         error.setContentText(message);
         error.setHeaderText(null);
         error.showAndWait();
+    }
+
+    public void alertInformation(String title, String headerText, String contentText) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
     }
 
     public void loadWindow(String fileLocation, String windowTitle, int width, int height) {
