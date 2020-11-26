@@ -16,6 +16,8 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.Optional;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
@@ -105,7 +107,7 @@ public class ClientGUIController {
         replyString = client.networkaccess.sendString(commandString, true);
 
         if(replyString.equals("Success")) {
-            ((Node)(mouseEvent.getSource())).getScene().getWindow().hide();
+            ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
             loadWindow("/MainApplication.fxml", "Main Application", 753, 497);
         } else if(replyString.equals("Locked")) {
             alertError("Account Locked Out", "Your account is locked out after 3 failed attempts \n Please go to Password Recovery to reset your Account");
@@ -181,7 +183,7 @@ public class ClientGUIController {
         }
 
         if(!RegexValidation.validSimplePassword(newPassword)) {
-            alertInformation("Invalid Format", "Password Incorrect Format", " It must have at least one digit \n It must have at least one upper or lower case letter \n It must be at least 8 characters long");
+            alertInformation("Invalid Format", "Password Incorrect Format", " It must have at least one digit \n It must have at least one upper or lower case letter \n It must be at least 8 characters long", false, null);
             return;
         }
 
@@ -192,9 +194,8 @@ public class ClientGUIController {
         commandString = "changepassword" + "," + username + "," + oldPassword + "," + newPassword;
         replyString = client.networkaccess.sendString(commandString, true);
 
-        if(replyString.equals("Success")) { //Message is not sending for some reason
-            alertInformation("Success", "Password Successfully Changed", "");
-            //after pressing okay make the password change window close -- TO ADD
+        if(replyString.equals("Success")) {
+            alertInformation("Success", "Password Successfully Changed", "", true, mouseEvent);
         } else if(replyString.equals("WrongOldPassword")) {
             alertError("Invalid Password", "The password you entered for your account is incorrect");
         } else if(replyString.equals("WrongUsername")) {
@@ -220,14 +221,11 @@ public class ClientGUIController {
 
         String commandString;
         String replyString;
-
-        // -- send a String to the server and wait for the response
         commandString = "forgotpassword" + "," + username;
         replyString = client.networkaccess.sendString(commandString, true);
 
         if(replyString.equals("Success")) {
-            alertInformation("Success", "Email has been sent", null);
-            //after pressing okay make the password recovery window close -- TO ADD
+            alertInformation("Success", "Email has been sent", "", true, mouseEvent);
         } else {
             alertError("Error", "Please re-enter your username and make sure it is valid");
         }
@@ -253,12 +251,12 @@ public class ClientGUIController {
         }
 
         if(!RegexValidation.validEmailAddress(email)) {
-            alertInformation("Invalid Format", "Email Address Incorrect Format", "Make sure the email address is valid and properly typed");
+            alertInformation("Invalid Format", "Email Address Incorrect Format", "Make sure the email address is valid and properly typed", false, null);
             return;
         }
 
         if(!RegexValidation.validSimplePassword(password)) {
-            alertInformation("Invalid Format", "Password Incorrect Format", " It must have at least one digit \n It must have at least one upper or lower case letter \n It must be at least 8 characters long");
+            alertInformation("Invalid Format", "Password Incorrect Format", " It must have at least one digit \n It must have at least one upper or lower case letter \n It must be at least 8 characters long", false, null);
             return;
         }
 
@@ -270,8 +268,7 @@ public class ClientGUIController {
         replyString = client.networkaccess.sendString(commandString, true);
 
         if(replyString.equals("Success")) {
-            ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
-            alertInformation("Success", "Your account has been created", "");
+            alertInformation("Success", "Your account has been created", "", true, mouseEvent);
         } else {
             alertError("Account Creation Failed", "User with username: " + username + "already exists \n Please create a new account with a different username");
         }
@@ -312,10 +309,8 @@ public class ClientGUIController {
 
         commandString = "logout";
         replyString = client.networkaccess.sendString(commandString, false);
-
         ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
         loadWindow("/LoginPage.fxml", "Login Page", 721, 475);
-
     }
 
     public void changePasswordWindow(MouseEvent mouseEvent) {
@@ -332,12 +327,17 @@ public class ClientGUIController {
         error.showAndWait();
     }
 
-    public void alertInformation(String title, String headerText, String contentText) {
+    public void alertInformation(String title, String headerText, String contentText, boolean closingEvent, MouseEvent mouseEvent) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(headerText);
         alert.setContentText(contentText);
-        alert.showAndWait();
+        Optional<ButtonType> result = alert.showAndWait();
+        if(closingEvent) {
+            if(result.get() == ButtonType.OK || !result.isPresent()) {
+                ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
+            }
+        }
     }
 
     public void loadWindow(String fileLocation, String windowTitle, int width, int height) {

@@ -70,10 +70,8 @@ public class DatabaseConnection {
                     return;
                 }
                 lockCount++;
-                //need to update the lockCount in the database
-//                stmt.executeUpdate("UPDATE SWE.Group3DB.users SET lockcount = '" + lockCount + "' WHERE username = '" + username + "'"); fix this
-//                You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.users SET lockcount = '1' WHERE username = 'keith'' at line 1
-                na.sendString("invalid", false);
+                stmt.executeUpdate("UPDATE SWEGroup3DB.users SET lockcount = '" + lockCount + "' WHERE username = '" + username + "'"); //Incrementing Lock Count
+                na.sendString("Invalid", false);
             }
         }
     }
@@ -160,7 +158,6 @@ public class DatabaseConnection {
                 } else {
                     na.sendString("WrongOldPassword", false);
                 }
-                na.sendString("Success", false);
             } else if(!resultSet.getString(1).equals(username)) {
                 na.sendString("WrongUsername", false);
             }
