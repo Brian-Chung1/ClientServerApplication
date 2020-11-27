@@ -16,12 +16,7 @@ public class CommandProtocol {
 	/**
 	 * commands and their responses
 	 */
-	private static HashMap<String, String> commands;	
-	static {
-	    commands = new HashMap<>();
-	    commands.put("disconnect", "");
-	    commands.put("hello", "world!");
-	}
+	private static String[] commandString;
 	
 	
 
@@ -33,7 +28,7 @@ public class CommandProtocol {
 	 * @return
 	 */
 	public static void processCommand(String cmd, NetworkAccess na, ClientHandler ch) throws SQLException {
-		String[] commandString = cmd.split(",");
+		commandString = cmd.split(",");
 		cmd = commandString[0];
 		System.out.println("SERVER receive: " + cmd);
 
@@ -84,22 +79,5 @@ public class CommandProtocol {
 			
 		}		
 	}
-	
-	/**
-	 * for testing the capabilities of the HashMap
-	 * Not used in the actual Client/Server system
-	 * 
-	 * @param args: command line arguments (unused)
-	 */
-	public static void main (String[] args) {
-		System.out.println(commands.get("disconnect"));
-		System.out.println(commands.get("hello"));
-		
-		Set<String>keys = commands.keySet();
-		for (String key : keys) {
-			System.out.println(key);
-		}
-		
-		System.out.println(commands.get("goodbye"));		
-	}
+
 }

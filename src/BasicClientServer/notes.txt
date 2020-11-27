@@ -1,5 +1,7 @@
 to do list
 1) open module settings of project, set the resources package to a resource folder - If fx errors occur this can fix it
+2) Organize & Add Comments to Code - Fully Test Code one more time before presentation
+3) We can make some functions in ClientGUIController private
 
 How to implement the port forwarding/ connecting using user IP rn we just allow any old IP to connect to the system.
 
