@@ -55,7 +55,7 @@ public class ClientGUIController {
     @FXML private TextField NewAccountUsernameTextField;
 
 
-
+    boolean currentPasswordFieldStatus = false;
 
 
     //Login Page Controller -------------------------------------------------------------------------------------------------------------------------
@@ -89,13 +89,12 @@ public class ClientGUIController {
     }
 
     public void AccountLoginEvent(MouseEvent mouseEvent) {
-        // -- send message to server and receive reply.
-        String commandString;
-        String replyString;
-
         //If the User presses login button with nothing typed in the fields then popup error message to type in shit
         String username = LoginPageUsernameTextField.getText();
-        String password = getLatestPassword(loginPasswordHidden, loginPasswordShown);
+        String password = getLatestPassword(loginPasswordHidden, loginPasswordShown,currentPasswordFieldStatus);
+
+        String commandString;
+        String replyString;
 
         if(username.isBlank() || password.isBlank()) {
             alertError("Missing Fields", "Please Enter your information in all appropriate fields");
@@ -115,6 +114,8 @@ public class ClientGUIController {
         } else {
             alertError("Login Error", "Please Re-Enter your Username and Password");
         }
+
+
     }
 
     //-------------------------------------------------------------------------------------------------------------------------
@@ -166,9 +167,9 @@ public class ClientGUIController {
 
     public void ChangePasswordEvent(MouseEvent mouseEvent) {
         String username = ChangePasswordUsernameTextField.getText();
-        String oldPassword = getLatestPassword(oldPasswordHidden, oldPasswordShown);
-        String newPassword = getLatestPassword(newPasswordHidden, newPasswordShown);
-        String ReEnteredNewPassword = getLatestPassword(ReEnteredNewPasswordHidden, ReEnteredNewPasswordShown);
+        String oldPassword = getLatestPassword(oldPasswordHidden, oldPasswordShown, currentPasswordFieldStatus);
+        String newPassword = getLatestPassword(newPasswordHidden, newPasswordShown, currentPasswordFieldStatus);
+        String ReEnteredNewPassword = getLatestPassword(ReEnteredNewPasswordHidden, ReEnteredNewPasswordShown, currentPasswordFieldStatus);
 
         //if the fields are empty or missing we return an error message
         if(username.isBlank() || oldPassword.isBlank() || newPassword.isBlank() || ReEnteredNewPassword.isBlank()) {
@@ -184,6 +185,11 @@ public class ClientGUIController {
 
         if(!RegexValidation.validSimplePassword(newPassword)) {
             alertInformation("Invalid Format", "Password Incorrect Format", " It must have at least one digit \n It must have at least one upper or lower case letter \n It must be at least 8 characters long", false, null);
+            return;
+        }
+
+        if(oldPassword.equals(newPassword)) {
+            alertError("Current Password matches New Password", "Please make sure that the Current Password does not match the New Password");
             return;
         }
 
@@ -243,7 +249,7 @@ public class ClientGUIController {
     public void AccountRegistrationEvent(MouseEvent mouseEvent) {
         String email = NewAccountEmailTextField.getText();
         String username = NewAccountUsernameTextField.getText();
-        String password = getLatestPassword(NewAccountPasswordHidden, NewAccountPasswordShown);
+        String password = getLatestPassword(NewAccountPasswordHidden, NewAccountPasswordShown, currentPasswordFieldStatus);
 
         if(email.isBlank() || username.isBlank() || password.isBlank()) {
             alertError("Missing Fields", "Please Enter your information in all appropriate fields");
@@ -353,8 +359,8 @@ public class ClientGUIController {
         }
     }
 
-    public String getLatestPassword(PasswordField hidden, TextField shown) {
-        return hidden.getText().length() > shown.getText().length() ? hidden.getText() : shown.getText();
+    public String getLatestPassword(PasswordField hidden, TextField shown, boolean status) {
+        return status ? shown.getText() : hidden.getText();
     }
 
     public void swapPasswordTextField(PasswordField hidden, TextField shown, boolean flag) {
@@ -362,10 +368,12 @@ public class ClientGUIController {
             shown.setText(hidden.getText());
             hidden.setVisible(false);
             shown.setVisible(true);
+            currentPasswordFieldStatus = true;
         } else {
             hidden.setText(shown.getText());
             hidden.setVisible(true);
             shown.setVisible(false);
+            currentPasswordFieldStatus = false;
         }
 
     }

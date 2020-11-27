@@ -48,12 +48,10 @@ public class CommandProtocol {
 		else if (cmd.equals("login")) {
 			String username = commandString[1];
 			String password = commandString[2];
-			na.sendString("Success", false);
-			ch.getServer().addLoggedInClient(ch);
 
 			//database checking
 			DatabaseConnection db = ch.getServer().getDB();
-			db.processLogin(username,password,na, ch);
+			db.processLogin(username, password, na, ch);
 		}
 
 		else if (cmd.equals("logout")) {
