@@ -1,10 +1,13 @@
 package BasicClientServer.BackEnd;
 
+import BasicClientServer.FrontEnd.ClientGUIController;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -22,6 +25,7 @@ import java.sql.Statement;
 public class ServerController extends Application {
 
     private static Server Server;
+    boolean ServerRunning;
 
     public void start(Stage primaryStage) throws Exception {
         Parent ServerGUI = FXMLLoader.load(getClass().getResource("/ServerGUI.fxml")); //Server GUI
@@ -38,6 +42,7 @@ public class ServerController extends Application {
 
 
     @FXML private TextArea ServerGUIDisplay;
+    @FXML private Button StartServerButton;
 
 
     //This is how we add text without replacing the previous text
@@ -86,8 +91,18 @@ public class ServerController extends Application {
 
 
     public void StartServer(MouseEvent mouseEvent) {
-        Server = new Server();
-        Thread serverthread = new Thread(Server);
-        serverthread.start();
+        if(ServerRunning == false) {
+            Server = new Server();
+            Thread serverthread = new Thread(Server);
+            serverthread.start();
+            ServerRunning = true;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Server Status");
+            alert.setHeaderText("Server is already running");
+            alert.setContentText("");
+            alert.showAndWait();
+        }
+        StartServerButton.setText("Server is running...");
     }
 }

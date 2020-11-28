@@ -50,13 +50,13 @@ public class DatabaseConnection {
         Statement stmt = conn.createStatement();
         ResultSet resultSet = stmt.executeQuery("SELECT *, count(*) FROM SWEGroup3DB.users WHERE username = '" + username + "'");
         if (resultSet.next()) {
-            int lockCount = Integer.parseInt(resultSet.getString(4).toString());
             //if the username is invalid
             //the query did not pull any results for usernames of that string
             if (resultSet.getString(5).equals("0")) {
                 na.sendString("Invalid", false);
                 return;
             }
+            int lockCount = Integer.parseInt(resultSet.getString(4));
             if (resultSet.getString(3).equals(password)) {
                 ch.getServer().addLoggedInClient(ch);
                 na.sendString("Success", false);
