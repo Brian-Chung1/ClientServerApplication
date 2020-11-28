@@ -50,18 +50,30 @@ public class ServerController extends Application {
 
 
     public void QueryConnectedUsers(MouseEvent mouseEvent) { //Number of Connected Users
+        if(!ServerRunning) {
+            alertServer("Server is not running", "");
+            return;
+        }
         clearDisplay(ServerGUIDisplay);
         int connectedUsers = Server.getConnections();
         ServerGUIDisplay.setText("Connected Users: " + connectedUsers);
     }
 
     public void QueryLoggedInUsers(MouseEvent mouseEvent) { //Number of Logged In Users
+        if(!ServerRunning) {
+            alertServer("Server is not running", "");
+            return;
+        }
         clearDisplay(ServerGUIDisplay);
         int connectedUsers = Server.getLoggedIn();
         ServerGUIDisplay.setText("Logged In Users: " + connectedUsers);
     }
 
     public void QuerySignedUpUsers(MouseEvent mouseEvent) throws SQLException { //Show List of Signed Up Users
+        if(!ServerRunning) {
+            alertServer("Server is not running", "");
+            return;
+        }
         clearDisplay(ServerGUIDisplay);
         String result = Server.getDB().DBQuerySignedUpUsers();
         String[] users = result.split(",");
@@ -72,14 +84,26 @@ public class ServerController extends Application {
     }
 
     public void QueryRegisteredUsers(MouseEvent mouseEvent) throws SQLException { //Number of Signed Up Users
+        if(!ServerRunning) {
+            alertServer("Server is not running", "");
+            return;
+        }
         clearDisplay(ServerGUIDisplay);
         String result = Server.getDB().DBQueryRegisteredUsers();
         ServerGUIDisplay.appendText("Registered Users: " + result);
     }
 
     public void QueryLockedOutUsers(MouseEvent mouseEvent) throws SQLException { //Show List of Locked Out Users
+        if(!ServerRunning) {
+            alertServer("Server is not running", "");
+            return;
+        }
         clearDisplay(ServerGUIDisplay);
         String result = Server.getDB().DBQueryLockedOutUsers();
+        if(result.equals("0")) {
+            ServerGUIDisplay.appendText("No Locked Out Users");
+            return;
+        }
         String[] users = result.split(",");
         ServerGUIDisplay.appendText("Locked Out Users" + "\n");
         for(String user : users) {
@@ -89,6 +113,14 @@ public class ServerController extends Application {
 
     public void clearDisplay(TextArea Display) { Display.clear(); }
 
+    public void alertServer(String headerText, String contentText) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Server Status");
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
+    }
+
 
     public void StartServer(MouseEvent mouseEvent) {
         if(ServerRunning == false) {
@@ -97,11 +129,7 @@ public class ServerController extends Application {
             serverthread.start();
             ServerRunning = true;
         } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Server Status");
-            alert.setHeaderText("Server is already running");
-            alert.setContentText("");
-            alert.showAndWait();
+           alertServer("Server is already running", "");
         }
         StartServerButton.setText("Server is running...");
     }

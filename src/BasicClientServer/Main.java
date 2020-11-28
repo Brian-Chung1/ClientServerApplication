@@ -18,7 +18,8 @@ public class Main extends Application {
         Parent mainApplication = FXMLLoader.load(getClass().getResource("resources/MainApplication.fxml")); //Main Application
         Parent connectWindow = FXMLLoader.load(getClass().getResource("resources/connectWindow.fxml")); //Main Application
 
-
+        //login page - disconnect
+        //main app - disconnect logout
         Scene scene = new Scene(connectWindow);
 
         primaryStage.setTitle("Connect");

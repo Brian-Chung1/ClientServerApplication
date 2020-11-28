@@ -50,9 +50,7 @@ public class DatabaseConnection {
         Statement stmt = conn.createStatement();
         ResultSet resultSet = stmt.executeQuery("SELECT *, count(*) FROM SWEGroup3DB.users WHERE username = '" + username + "'");
         if (resultSet.next()) {
-            //if the username is invalid
-            //the query did not pull any results for usernames of that string
-            if (resultSet.getString(5).equals("0")) {
+            if (resultSet.getString(5).equals("0")) { //if username is not found count(*) would be 0
                 na.sendString("Invalid", false);
                 return;
             }
@@ -60,7 +58,7 @@ public class DatabaseConnection {
             if (resultSet.getString(3).equals(password)) {
                 ch.getServer().addLoggedInClient(ch);
                 na.sendString("Success", false);
-                if(lockCount < 3) {
+                if(lockCount < 3) { //if a user successfully logins before reaching lockcount of 3, it resets their lockcount so it does not linger
                     try {
                         stmt.executeUpdate("UPDATE SWEGroup3DB.users SET lockcount = 0 WHERE username = '" + username + "'"); //Resetting Lock count to 0
                     } catch(SQLException e) {
@@ -76,7 +74,7 @@ public class DatabaseConnection {
                 }
                 lockCount++;
                 try {
-                    stmt.executeUpdate("UPDATE SWEGroup3DB.users SET lockcount = '" + lockCount + "' WHERE username = '" + username + "'"); //Incrementing Lock Count
+                    stmt.executeUpdate("UPDATE SWEGroup3DB.users SET lockcount = '" + lockCount + "' WHERE username = '" + username + "'"); //Updates users lockCount in db
                 } catch(SQLException e) {
                     System.out.println("Login SQL Exception");
                 }
@@ -88,8 +86,6 @@ public class DatabaseConnection {
     public String DBQueryRegisteredUsers() throws SQLException {
         Statement stmt = conn.createStatement();
         ResultSet resultSet = stmt.executeQuery("select count(*) from SWEGroup3DB.users");
-        ResultSetMetaData rsmd = resultSet.getMetaData();
-        int columnsNumber = rsmd.getColumnCount();
         while (resultSet.next()) {
             return (resultSet.getString(1));
         }
@@ -99,8 +95,6 @@ public class DatabaseConnection {
     public String DBQuerySignedUpUsers() throws SQLException {
         Statement stmt = conn.createStatement();
         ResultSet resultSet = stmt.executeQuery("select * from SWEGroup3DB.users");
-        ResultSetMetaData rsmd = resultSet.getMetaData();
-        int columnsNumber = rsmd.getColumnCount();
         String result="";
         while (resultSet.next()) {
             result += (resultSet.getString(1)) + ",";
@@ -111,10 +105,9 @@ public class DatabaseConnection {
     public String DBQueryLockedOutUsers() throws SQLException {
         Statement stmt = conn.createStatement();
         ResultSet resultSet = stmt.executeQuery("SELECT username, count(*) from SWEGroup3DB.users where lockcount=3");
-        ResultSetMetaData rsmd = resultSet.getMetaData();
-        int columnsNumber = rsmd.getColumnCount();
         String result="";
         while (resultSet.next()) {
+            if(resultSet.getString(2).equals("0")) return "0";
             result += (resultSet.getString(1));
             result += ",";
         }
@@ -124,7 +117,6 @@ public class DatabaseConnection {
     public void processPasswordRecovery(String username, NetworkAccess na, ClientHandler ch) throws SQLException {
         Statement stmt = conn.createStatement();
         ResultSet resultSet = stmt.executeQuery("SELECT email, password, count(*) FROM SWEGroup3DB.users WHERE username = '" + username + "'");
-        ResultSetMetaData rsmd = resultSet.getMetaData();
         if(resultSet.next()) {
             if(resultSet.getString(3).equals("1")) {
                 SendEmailGmailSMTP.sendMail(resultSet.getString(1), resultSet.getString(2)); //Sending password to Email
