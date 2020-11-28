@@ -1,5 +1,7 @@
 package BasicClientServer;
 
+import BasicClientServer.BackEnd.Client;
+import BasicClientServer.FrontEnd.ClientGUIController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,6 +10,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    private ClientGUIController C;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -25,6 +28,15 @@ public class Main extends Application {
         primaryStage.setTitle("Connect");
         primaryStage.setScene(scene);
         primaryStage.show();
+        C = new ClientGUIController();
+    }
+
+    @Override
+    public void stop() {
+        Client client = C.getClient();
+        client.networkaccess.sendString("logout", false);
+        client.networkaccess.sendString("disconnect", false);
+        System.exit(0);
     }
 
 

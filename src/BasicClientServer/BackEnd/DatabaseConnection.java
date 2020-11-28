@@ -55,16 +55,14 @@ public class DatabaseConnection {
                 return;
             }
             int lockCount = Integer.parseInt(resultSet.getString(4));
-            if (resultSet.getString(3).equals(password)) {
+            if (resultSet.getString(3).equals(password) && lockCount != 3) {
                 ch.getServer().addLoggedInClient(ch);
                 na.sendString("Success", false);
-                if(lockCount < 3) { //if a user successfully logins before reaching lockcount of 3, it resets their lockcount so it does not linger
                     try {
                         stmt.executeUpdate("UPDATE SWEGroup3DB.users SET lockcount = 0 WHERE username = '" + username + "'"); //Resetting Lock count to 0
                     } catch(SQLException e) {
                         System.out.println("Caught Exception after Resetting Lock Count after Successful Login");
                     }
-                }
                 return;
             } else {
                 //increment lockcount

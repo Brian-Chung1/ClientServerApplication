@@ -24,6 +24,8 @@ import javafx.scene.control.TextField;
 
 public class ClientGUIController {
 
+    public static Client getClient() { return client; }
+
     //Connect Window Elements
     public static Client client;
     @FXML private TextField IPTextField;
@@ -46,6 +48,7 @@ public class ClientGUIController {
 
     //Password Recovery Elements
     @FXML private TextField PasswordRecoveryTextField;
+    @FXML private Button PasswordRecoveryButton;
 
     //Account Registration Elements
     @FXML private TextField NewAccountEmailTextField;
@@ -56,6 +59,8 @@ public class ClientGUIController {
 
 
     boolean currentPasswordFieldStatus = false;
+
+
 
 
     //Login Page Controller -------------------------------------------------------------------------------------------------------------------------
@@ -229,7 +234,6 @@ public class ClientGUIController {
         String replyString;
         commandString = "forgotpassword" + "," + username;
         replyString = client.networkaccess.sendString(commandString, true);
-
         if(replyString.equals("Success")) {
             alertInformation("Success", "Email has been sent", "", true, mouseEvent);
         } else {

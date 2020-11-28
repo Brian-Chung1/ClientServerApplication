@@ -25,6 +25,7 @@ import java.sql.Statement;
 public class ServerController extends Application {
 
     private static Server Server;
+    private static Thread ServerThread;
     boolean ServerRunning;
 
     public void start(Stage primaryStage) throws Exception {
@@ -33,6 +34,12 @@ public class ServerController extends Application {
         primaryStage.setTitle("Server Application");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    @Override
+    public void stop(){
+        System.out.println("Terminate Class");
+        System.exit(0);
     }
 
 
@@ -125,8 +132,8 @@ public class ServerController extends Application {
     public void StartServer(MouseEvent mouseEvent) {
         if(ServerRunning == false) {
             Server = new Server();
-            Thread serverthread = new Thread(Server);
-            serverthread.start();
+            ServerThread = new Thread(Server);
+            ServerThread.start();
             ServerRunning = true;
         } else {
            alertServer("Server is already running", "");
