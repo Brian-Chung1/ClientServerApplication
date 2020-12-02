@@ -31,6 +31,5 @@
             </CheckBox>
             </children>
         </AnchorPane>
-      <Button layoutX="14.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#disconnectFromServer" prefHeight="31.0" prefWidth="78.0" style="-fx-background-color: #ffff; -fx-cursor: hand;" text="Disconnect" />
     </children>
 </AnchorPane>

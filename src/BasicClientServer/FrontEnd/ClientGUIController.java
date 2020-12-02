@@ -1,8 +1,8 @@
 package BasicClientServer.FrontEnd;
 
-import BasicClientServer.BackEnd.Client;
-import BasicClientServer.BackEnd.RegexValidation;
-import BasicClientServer.BackEnd.SendEmailGmailSMTP;
+import BasicClientServer.BackEnd.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,11 +11,16 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.sql.SQLException;
 import java.util.Optional;
 
 import javafx.scene.control.Alert;
@@ -84,13 +89,6 @@ public class ClientGUIController {
         }
 
 
-    }
-
-    //Disconnects from server upon pressing 'Disconnect' Button
-    public void disconnectFromServer(MouseEvent mouseEvent) {
-        client.disconnect();
-        //close the GUI
-        ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
     }
 
     public void AccountLoginEvent(MouseEvent mouseEvent) {
@@ -188,8 +186,8 @@ public class ClientGUIController {
             return;
         }
 
-        if(!RegexValidation.validSimplePassword(newPassword)) {
-            alertInformation("Invalid Format", "Password Incorrect Format", " It must have at least one digit \n It must have at least one upper or lower case letter \n It must be at least 8 characters long", false, null);
+        if(!RegexValidation.validSimplePassword(newPassword) || newPassword.contains(",")) {
+            alertInformation("Invalid Format", "Password Incorrect Format", " It must have at least one digit \n It must have at least one upper or lower case letter \n It must be at least 8 characters long \n Password Cannot Contain commas ( , )", false, null);
             return;
         }
 
@@ -265,8 +263,13 @@ public class ClientGUIController {
             return;
         }
 
+        if(username.contains(",") || password.contains(",")) {
+            alertInformation("Invalid Format", "", "Make sure the Username and Password does not contain any commas ( , ) ", false, null);
+            return;
+        }
+
         if(!RegexValidation.validSimplePassword(password)) {
-            alertInformation("Invalid Format", "Password Incorrect Format", " It must have at least one digit \n It must have at least one upper or lower case letter \n It must be at least 8 characters long", false, null);
+            alertInformation("Invalid Format", "Password Incorrect Format", " It must have at least one digit \n It must have at least one upper or lower case letter \n It must be at least 8 characters long \n Password Cannot Contain commas ( , )", false, null);
             return;
         }
 
@@ -303,15 +306,6 @@ public class ClientGUIController {
     //Main Application Window Controller ---------------------------------------------------------------------------------------
     //Calls Disconnect From Server Method Located in Login Page Controller Tab
 
-    public void disconnectAndLogout(MouseEvent mouseEvent) {
-        String commandString;
-        String replyString;
-        commandString = "logout";
-        replyString = client.networkaccess.sendString(commandString, false);
-        ((Stage)(((Button)mouseEvent.getSource()).getScene().getWindow())).close();
-        disconnectFromServer(mouseEvent);
-    }
-
     public void AccountLogoutEvent(MouseEvent mouseEvent) {
         // -- send message to server and receive reply.
         String commandString;
@@ -326,6 +320,39 @@ public class ClientGUIController {
     public void changePasswordWindow(MouseEvent mouseEvent) {
         loadWindow("/ChangePassword.fxml", "Change Password", 685, 485);
     }
+
+    @FXML private TableView<Vehicle> table;
+
+    @FXML private TableColumn<Vehicle, String> Type;
+
+    @FXML private TableColumn<Vehicle, String> Make;
+
+    @FXML private TableColumn<Vehicle, String> Model;
+
+    @FXML private TableColumn<Vehicle, String> Color;
+
+    @FXML private TableColumn<Vehicle, Integer> Year;
+
+    @FXML private TableColumn<Vehicle, String> VIN;
+
+    public void getCarData(MouseEvent mouseEvent) throws SQLException {
+        DatabaseConnection db = new DatabaseConnection();
+        Vehicle[] vehicles = db.getVehicleData();
+        ObservableList<Vehicle> list = FXCollections.observableArrayList();
+        for(int i = 0; i < vehicles.length; i++) {
+            list.add(vehicles[i]);
+        }
+
+        Type.setCellValueFactory(new PropertyValueFactory<Vehicle, String>("Type"));
+        Make.setCellValueFactory(new PropertyValueFactory<Vehicle, String>("Make"));
+        Model.setCellValueFactory(new PropertyValueFactory<Vehicle, String>("Model"));
+        Color.setCellValueFactory(new PropertyValueFactory<Vehicle, String>("Color"));
+        Year.setCellValueFactory(new PropertyValueFactory<Vehicle, Integer>("Year"));
+        VIN.setCellValueFactory(new PropertyValueFactory<Vehicle, String>("VIN"));
+
+        table.setItems(list);
+    }
+
 
     // ------------------------------------------------------------------------------------------------------------------------
 

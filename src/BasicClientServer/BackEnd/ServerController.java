@@ -118,6 +118,8 @@ public class ServerController extends Application {
         }
     }
 
+
+
     public void clearDisplay(TextArea Display) { Display.clear(); }
 
     public void alertServer(String headerText, String contentText) {

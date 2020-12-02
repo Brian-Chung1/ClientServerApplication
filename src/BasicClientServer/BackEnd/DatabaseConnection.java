@@ -164,6 +164,20 @@ public class DatabaseConnection {
         }
     }
 
+    public Vehicle[] getVehicleData() throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet resultSet = stmt.executeQuery("SELECT * FROM SWEGroup3DB.vehicles");
+        Vehicle[] vehicles = new Vehicle[6];
+        int count=0;
+        String res = "";
+        while (resultSet.next()) {
+            Vehicle vehicle = new Vehicle(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), Integer.parseInt(resultSet.getString(5)), resultSet.getString(6));
+            vehicles[count] = vehicle;
+            count++;
+        }
+        return vehicles;
+    }
+
 
 
 
