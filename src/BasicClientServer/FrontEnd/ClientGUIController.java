@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import javafx.scene.control.Alert;
@@ -337,10 +338,10 @@ public class ClientGUIController {
 
     public void getCarData(MouseEvent mouseEvent) throws SQLException {
         DatabaseConnection db = new DatabaseConnection();
-        Vehicle[] vehicles = db.getVehicleData();
+        ArrayList<Vehicle> vehicles = db.getVehicleData();
         ObservableList<Vehicle> list = FXCollections.observableArrayList();
-        for(int i = 0; i < vehicles.length; i++) {
-            list.add(vehicles[i]);
+        for(int i = 0; i < vehicles.size(); i++) {
+            list.add(vehicles.get(i));
         }
 
         Type.setCellValueFactory(new PropertyValueFactory<Vehicle, String>("Type"));

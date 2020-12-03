@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 // -- MAKE SURE THE JDBC CONNECTOR JAR IS IN THE BUILD PATH
 //    workspace -> properties -> Java Build Path -> Libraries -> Add External JARs...
@@ -164,16 +165,13 @@ public class DatabaseConnection {
         }
     }
 
-    public Vehicle[] getVehicleData() throws SQLException {
+    public ArrayList<Vehicle> getVehicleData() throws SQLException {
         Statement stmt = conn.createStatement();
         ResultSet resultSet = stmt.executeQuery("SELECT * FROM SWEGroup3DB.vehicles");
-        Vehicle[] vehicles = new Vehicle[6];
-        int count=0;
-        String res = "";
+        ArrayList<Vehicle> vehicles=new ArrayList<>();
         while (resultSet.next()) {
             Vehicle vehicle = new Vehicle(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), Integer.parseInt(resultSet.getString(5)), resultSet.getString(6));
-            vehicles[count] = vehicle;
-            count++;
+            vehicles.add(vehicle);
         }
         return vehicles;
     }
